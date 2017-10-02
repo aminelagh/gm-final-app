@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use DB;
+use \Exception;
 
 class Stock_taille extends Model
 {
@@ -75,8 +76,9 @@ class Stock_taille extends Model
 
     public static function deleteEmptyItems()
     {
-        $data = DB::select("delete from stock_tailles where quantite=0");
-        //$data = DB::select("show tables");
-        //dump($data);
+        try{
+            $data = DB::select("delete from stock_tailles where quantite=0");
+        }catch (Exception $e){ return redirect()->back()->withInput()->withAlertDanger("Erreur !!!<br>Message d'erreur: <b>".$e->getMessage()."</b>.");}
+
     }
 }

@@ -137,7 +137,6 @@
                         </tfoot>
                         <tbody>
                         @foreach( $data as $item )
-
                             <tr>
                                 <input type="hidden" name="id_stock[{{ $loop->iteration }}]"
                                        value="{{ $item->id_stock }}"/>

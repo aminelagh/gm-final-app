@@ -77,6 +77,7 @@ class StockController extends Controller
     {
         $magasin = Magasin::find($p_id);
         $articles = collect(DB::select("call getArticlesForStock(" . $p_id . "); "));
+        //dd($articles);
 
         if ($magasin == null)
             return redirect()->back()->withInput()->with('alert_warning', "Le magasin choisi n'existe pas.");
@@ -98,9 +99,18 @@ class StockController extends Controller
     //Stock IN for main magasin ----------------------------------------------------------------------------------------
     public function addStockIN()
     {
-        $p_id_magasin = 1;
-        Session::get('id_magasin');
-        $data = Stock::where('id_magasin', $p_id_magasin)->get();
+        $p_id_magasin = 1;//Session::get('id_magasin');
+        //$data = Stock::where('id_magasin', $p_id_magasin)->get();
+
+        $data = collect(DB::select("
+            SELECT s.*,a.designation,a.code,a.ref,a.alias,a.couleur,a.sexe,a.image,
+                  c.libelle as libelle_c, m.libelle as libelle_m, f.libelle as libelle_f
+            FROM Stocks s LEFT JOIN articles a on s.id_article=a.id_article
+                          LEFT JOIN categories c on a.id_categorie=c.id_categorie
+                          LEFT JOIN fournisseurs f on a.id_fournisseur=f.id_fournisseur
+                          LEFT JOIN marques m on a.id_marque=m.id_marque
+            WHERE s.id_magasin=" . 1 . " order by a.id_article;"));
+
         if ($data->isEmpty())
             return redirect()->back()->withInput()->withAlertWarning("Cet element du stock n'existe pas.");
 
@@ -119,14 +129,20 @@ class StockController extends Controller
     //Stock OUT for main magasin ---------------------------------------------------------------------------------------
     public function addStockOUT()
     {
-        $p_id_magasin = 1;//Session::get('id_magasin');
-        $data = Stock::where('id_magasin', $p_id_magasin)->get();
-        if ($data == null)
-            return redirect()->back()->withInput()->withAlertWarning("Cet element du stock n'existe pas.");
+        $data = collect(DB::select("
+            SELECT s.*,a.designation,a.code,a.ref,a.alias,a.couleur,a.sexe,a.image,
+                  c.libelle as libelle_c, m.libelle as libelle_m, f.libelle as libelle_f
+            FROM Stocks s LEFT JOIN articles a on s.id_article=a.id_article
+                          LEFT JOIN categories c on a.id_categorie=c.id_categorie
+                          LEFT JOIN fournisseurs f on a.id_fournisseur=f.id_fournisseur
+                          LEFT JOIN marques m on a.id_marque=m.id_marque
+            WHERE s.id_magasin=" . 1 . " order by a.id_article;"));
+
+        if ($data->isEmpty())
+            return redirect()->back()->withAlertWarning("Le stock du magasin est vide, veuillez commencer par l'alimenter.");
 
         $magasin = Magasin::find(1);
-        $tailles = Taille_article::all();
-        return view('Espace_Magas.add-stockOUT-form')->withMagasin($magasin)->withData($data)->withTailles($tailles);
+        return view('Espace_Magas.add-stockOUT-form')->withData($data)->withMagasin($magasin);
     }
 
     public function submitAddStockOUT()
@@ -139,7 +155,14 @@ class StockController extends Controller
     //Stock OUT for main magasin ---------------------------------------------------------------------------------------
     public function addStockTransfertOUTall()
     {
-        $data = Stock::where('id_magasin', 1)->get();
+        $data = collect(DB::select("
+            SELECT s.*,a.designation,a.code,a.ref,a.alias,a.couleur,a.sexe,a.image,
+                  c.libelle as libelle_c, m.libelle as libelle_m, f.libelle as libelle_f
+            FROM Stocks s LEFT JOIN articles a on s.id_article=a.id_article
+                          LEFT JOIN categories c on a.id_categorie=c.id_categorie
+                          LEFT JOIN fournisseurs f on a.id_fournisseur=f.id_fournisseur
+                          LEFT JOIN marques m on a.id_marque=m.id_marque
+            WHERE s.id_magasin=" . 1 . " order by a.id_article;"));
         if ($data->isEmpty())
             return redirect()->back()->withInput()->withAlertWarning("Le stock du magasin principal est vide, veuillez commencer par l'alimenter avant de procéder à un transfert.");
 
@@ -148,14 +171,21 @@ class StockController extends Controller
             return redirect()->back()->withInput()->withAlertWarning("Veuillez creer des magasins avant de proceder a un transfert.");
 
         $magasinSource = Magasin::find(1);
-        $tailles = Taille_article::all();
 
-        return view('Espace_Magas.add-stockTransfertOUTall-form')->withMagasinSource($magasinSource)->withMagasins($magasins)->withData($data)->withTailles($tailles);
+        return view('Espace_Magas.add-stockTransfertOUTall-form')->withMagasinSource($magasinSource)->withMagasins($magasins)->withData($data);
     }
 
     public function addStockTransfertOUT($p_id_magasin_destination)
     {
-        $data = Stock::where('id_magasin', 1)->get();
+        $data = collect(DB::select("
+            SELECT s.*,a.designation,a.code,a.ref,a.alias,a.couleur,a.sexe,a.image,
+                  c.libelle as libelle_c, m.libelle as libelle_m, f.libelle as libelle_f
+            FROM Stocks s LEFT JOIN articles a on s.id_article=a.id_article
+                          LEFT JOIN categories c on a.id_categorie=c.id_categorie
+                          LEFT JOIN fournisseurs f on a.id_fournisseur=f.id_fournisseur
+                          LEFT JOIN marques m on a.id_marque=m.id_marque
+            WHERE s.id_magasin=" . 1 . " order by a.id_article;"));
+
         if ($data->isEmpty())
             return redirect()->back()->withInput()->withAlertWarning("Le stock du magasin principal est vide, veuillez commencer par l'alimenter avant de procéder à un transfert.");
 
@@ -201,15 +231,6 @@ class StockController extends Controller
     }
     //------------------------------------------------------------------------------------------------------------------
 
-
-    /*public function listerStocks($p_id_magasin)
-    {
-        $data = Stock::where('id_magasin', $p_id_magasin)->get();
-        if ($data->isEmpty())
-            return redirect()->back()->withInput()->with('alert_warning', "Le stock de ce magasin est vide.");
-        else
-            return view('Espace_Magas.liste-stocks')->with('data', $data);
-    }*/
 
 
 }

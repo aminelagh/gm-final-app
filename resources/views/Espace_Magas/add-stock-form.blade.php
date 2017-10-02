@@ -1,32 +1,32 @@
 @extends('layouts.main_master')
 
-@section('title') Ajouter le  Stock du magasin {{ $magasin->libelle }} @endsection
+@section('title') Création de Stock du magasin {{ $magasin->libelle }} @endsection
 
 @section('main_content')
-    <h3 class="page-header">creation du stock du magasin: <strong>{{ $magasin->libelle }}</strong></h3>
+    <h3 class="page-header">Création du stock du magasin: <strong>{{ $magasin->libelle }}</strong></h3>
 
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ route('magas.home') }}">Dashboard</a></li>
         <li class="breadcrumb-item">Gestion des magasins</li>
-        <li class="breadcrumb-item"><a href="{{ Route('magas.magasins') }}">Liste
-                des magasins</a></li>
+        <li class="breadcrumb-item"><a href="{{ Route('magas.magasins') }}">Liste des magasins</a></li>
         <li class="breadcrumb-item">{{ $magasin->libelle }}</li>
-        <li class="breadcrumb-item active">Creation du stock</li>
+        <li class="breadcrumb-item active">Création du stock</li>
     </ol>
 
 
     <div class="row">
         @if( !$articles->isEmpty() )
             <div class="breadcrumb">
-                Afficher/Masquer: <a class="toggle-vis" data-column="1">Reference</a> -
-                <a class="toggle-vis" data-column="2">Code</a> -
+                Afficher/Masquer:
+                <a class="toggle-vis" data-column="0">Reference</a> -
+                <a class="toggle-vis" data-column="1">Code</a> -
+                <a class="toggle-vis" data-column="2">Designation</a> -
                 <a class="toggle-vis" data-column="3">Categorie</a> -
                 <a class="toggle-vis" data-column="4">Fournisseur</a> -
                 <a class="toggle-vis" data-column="5">Marque</a> -
-                <a class="toggle-vis" data-column="6">Designation</a> -
-                <a class="toggle-vis" data-column="7">Couleur</a> -
-                <a class="toggle-vis" data-column="8">Sexe</a> -
-                <a class="toggle-vis" data-column="9">Prix</a>
+                <a class="toggle-vis" data-column="6">Couleur</a> -
+                <a class="toggle-vis" data-column="7">Sexe</a> -
+                <a class="toggle-vis" data-column="8">Prix</a>
             </div>
         @endif
     </div>
@@ -42,36 +42,36 @@
                     <input type="hidden" name="id_magasin" value="{{ $magasin->id_magasin }}"/>
 
                     <table id="example" class="table table-striped table-bordered table-hover">
-                        <thead bgcolor="#DBDAD8">
+                        <thead>
                         <tr>
 
-                            <th> Reference</th>
-                            <th> Code</th>
-                            <th> Categorie</th>
-                            <th> Fournisseur</th>
-                            <th> Marque</th>
+                            <th>Reference</th>
+                            <th>Code</th>
 
-                            <th> Designation</th>
+                            <th>Designation</th>
 
-                            <th> Couleur</th>
-                            <th> Sexe</th>
+                            <th>Categorie</th>
+                            <th>Fournisseur</th>
+                            <th>Marque</th>
 
-                            <th> Prix</th>
-                            <th></th>
-                            <th></th>
-                            <th>Actions</th>
+                            <th>Couleur</th>
+                            <th>Sexe</th>
+
+                            <th>Prix</th>
+                            <th>Quantité min</th>
+                            <th>Quantité max</th>
+                            <th>Details</th>
                         </tr>
                         </thead>
                         @if( !$articles->isEmpty() )
-                            <tfoot bgcolor="#DBDAD8">
+                            <tfoot>
                             <tr>
-
                                 <th>Reference</th>
                                 <th>Code</th>
+                                <th>Designation</th>
                                 <th>Categorie</th>
                                 <th>Fournisseur</th>
                                 <th>Marque</th>
-                                <th>Designation</th>
                                 <th>Couleur</th>
                                 <th>Sexe</th>
                                 <th>Prix</th>
@@ -91,85 +91,115 @@
                                     <input type="hidden" name="designation[{{ $loop->index+1 }}]"
                                            value="{{ $item->designation }}">
 
-                                    
+
                                     <td align="right">{{ $item->ref }} {{ $item->alias!=null? ' - '.$item->alias : '' }}</td>
                                     <td align="right">{{ $item->code }}</td>
 
-                                    <td>{{ \App\Models\Categorie::getLibelle($item->id_categorie) }}</td>
-                                    <td>{{ \App\Models\Fournisseur::getLibelle($item->id_fournisseur) }}</td>
-                                    <td>{!! \App\Models\Marque::getLibelle($item->id_marque) !!}</td>
-
                                     <td>{{ $item->designation }}</td>
+
+                                    <td>{{ $item->libelle_c }}</td>
+                                    <td>{{ $item->libelle_f }}</td>
+                                    <td>{!! $item->libelle_m !!}</td>
 
                                     <td>{{ $item->couleur }}</td>
                                     <td>{{ $item->sexe }}</td>
 
                                     <td align="right">{{ $item->prix_v }} DH</td>
-                                    <td><input type="number" min="0" placeholder="Quantite Min" width="5"
-                                               name="quantite_min[{{ $loop->index+1 }}]"
+                                    <td><input type="number" min="0" class="form-control" placeholder="Quantite Min" name="quantite_min[{{ $loop->index+1 }}]"
                                                value="{{ old('quantite_min.'.($loop->index+1) ) }}"></td>
-                                    <td><input type="number" min="0" placeholder="Quantite Max"
-                                               name="quantite_max[{{ $loop->index+1 }}]"
+                                    <td><input type="number" min="0" class="form-control" placeholder="Quantite Max" name="quantite_max[{{ $loop->index+1 }}]"
                                                value="{{ old('quantite_max.'.($loop->index+1)) }}"></td>
-                                    <td>
-                                        <button type="button" class="btn btn-info btn-circle" data-toggle="modal"
-                                                data-target="#myModal{{ $loop->index+1 }}" title="Detail article">
-                                            <i class="glyphicon glyphicon-eye-open" ></i>
-                                        </button>
-                                    </td>
+                                    <td align="center">
+                                        <a data-toggle="modal" data-target="#modal{{ $loop->iteration }}">
+                                            <i class="glyphicon glyphicon-info-sign" aria-hidden="false"></i>
+                                        </a>
+                                        {{-- Modal (pour afficher les details de chaque article) --}}
+                                        <div class="modal fade" id="modal{{ $loop->iteration }}" role="dialog">
+                                            <div class="modal-dialog modal-md">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal">
+                                                            &times;
+                                                        </button>
+                                                        <h4 class="modal-title">{{ $item->designation }}</h4>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <table class="table table-striped table-bordered table-hover">
+                                                            <tr>
+                                                                <td>Reference</td>
+                                                                <th>{{ $item->ref }} - {{ $item->alias }}</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Code</td>
+                                                                <th>{{ $item->code }}</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Marque</td>
+                                                                <th>{{ \App\Models\Article::getMarque($item->id_article) }}</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Categorie</td>
+                                                                <th>{{ \App\Models\Article::getCategorie($item->id_article) }}</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Fournisseur</td>
+                                                                <th>{{ \App\Models\Article::getFournisseur($item->id_article) }}</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Couleur</td>
+                                                                <th>{{ $item->couleur }}</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Sexe</td>
+                                                                <th>{{ $item->sexe }}</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="2" align="center">Prix d'achat</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th align="right">{{ \App\Models\Article::getPrixAchatHT($item->id_article) }}
+                                                                    Dhs HT
+                                                                </th>
+                                                                <th>{{ \App\Models\Article::getPrixAchatTTC($item->id_article) }}
+                                                                    Dhs TTC
+                                                                </th>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="2" align="center">Prix de vente</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th align="right">{{ \App\Models\Article::getPrixHT($item->id_article) }}
+                                                                    Dhs HT
+                                                                </th>
+                                                                <th>{{ \App\Models\Article::getPrixTTC($item->id_article) }}
+                                                                    Dhs TTC
+                                                                </th>
+                                                            </tr>
+                                                        </table>
+                                                        @if( $item->image != null) <img
+                                                                src="{{ asset($item->image) }}"
+                                                                width="150px">@endif
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <div class="col-lg-4">
+                                                            <a href="{{ route('magas.article',[$item->id_article]) }}"
+                                                               class="btn btn-info btn-outline">
+                                                                Modifier
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <button type="button" class="btn btn-info btn-outline"
+                                                                    data-dismiss="modal">
+                                                                Fermer
+                                                            </button>
 
-                                    {{-- Modal (pour afficher les details de chaque article) --}}
-                                    <div class="modal fade" id="myModal{{ $loop->index+1 }}" role="dialog">
-                                        <div class="modal-dialog modal-sm">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close"
-                                                            data-dismiss="modal">&times;
-                                                    </button>
-                                                    <h4 class="modal-title" align="center">
-                                                        <b>{{ $item->designation }}</b></h4>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <p><b>code:</b> {{$item->code }}</p>
-                                                    <p>
-                                                        <b>Reference:</b> {{ $item->ref }} {{ $item->alias!=null? ' - '.$item->alias : '' }}
-                                                    </p>
-                                                    <p>
-                                                    <hr>
-                                                    </p>
-                                                    <p>
-                                                        <b>Categorie:</b> {{ \App\Models\Categorie::getLibelle($item->id_categorie) }}
-                                                    </p>
-                                                    <p>
-                                                        <b>Fournisseur:</b> {{ \App\Models\Fournisseur::getLibelle($item->id_fournisseur) }}
-                                                    </p>
-                                                    <p>
-                                                        <b>Marque:</b> {{ \App\Models\Marque::getLibelle($item->id_marque) }}
-                                                    </p>
-                                                    <p>
-                                                    <hr>
-                                                    </p>
-                                                    <p><b>Couleur:</b> {{ $item->couleur }}</p>
-                                                    <p><b>sexe:</b> {{$item->sexe }}</p>
-                                                    <p><b>Prix de
-                                                            vente</b> {{ \App\Models\Article::getPrixTTC($item->id_article) }}
-                                                    </p>
-
-                                                    @if($item->image!=null)
-                                                        <img src="{{ asset($item->image) }}" width="100" height="100"
-                                                             align="middle">
-                                                    @endif
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default"
-                                                            data-dismiss="modal">Fermer
-                                                    </button>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    {{-- fin Modal (pour afficher les details de chaque article) --}}
-
+                                        {{-- fin Modal (pour afficher les details de chaque article) --}}
+                                    </td>
                                 </tr>
                             @endforeach
                         @endif
@@ -228,67 +258,62 @@
                     //"info": true,
                     stateSave: false,
                     "columnDefs": [
-                        {"width": "04%", "targets": 0, "type": "num", "visible": true, "searchable": true },//#
-                        {"width": "05%", "targets": 1, "type": "string", "visible": false},
+                        {"width": "04%", "targets": 0, "type": "num", "visible": true, "searchable": true},//#
+                        {"width": "05%", "targets": 1, "type": "string", "visible": true},
                         {"width": "05%", "targets": 2, "type": "string", "visible": true},
 
                         {"width": "08%", "targets": 3, "type": "string", "visible": false},
                         {"width": "08%", "targets": 4, "type": "string", "visible": false},
                         {"width": "08%", "targets": 5, "type": "string", "visible": false},
 
-                        //{"width": "02%", "targets": 6, "type": "string", "visible": true},
+                        {"width": "02%", "targets": 6, "type": "string", "visible": false},
 
                         {"width": "02%", "targets": 7, "type": "string", "visible": false},
                         {"width": "06%", "targets": 8, "type": "string", "visible": false},
-                        {"width": "06%", "targets": 9, "type": "num-fmt", "visible": true},
 
+                        {"width": "04%", "targets": 9, "visible": true, "searchable": false},
                         {"width": "04%", "targets": 10, "visible": true, "searchable": false},
-                        {"width": "04%", "targets": 11, "visible": true, "searchable": false},
-                        {"width": "04%", "targets": 12, "visible": true, "searchable": false},
+                        {"width": "04%", "targets": 11, "visible": true, "searchable": false}
                     ],
                 });
 
 
-
-                $('#myForm').on('submit', function(e){
+                $('#myForm').on('submit', function (e) {
                     var form = this;
 
                     // Encode a set of form elements from all pages as an array of names and values
                     var params = table.$('input,select,textarea').serializeArray();
 
                     // Iterate over all form elements
-                    $.each(params, function(){
+                    $.each(params, function () {
                         // If element doesn't exist in DOM
-                        if(!$.contains(document, form[this.name])){
+                        if (!$.contains(document, form[this.name])) {
                             // Create a hidden element
                             $(form).append(
-                                $('<input>')
-                                    .attr('type', 'hidden')
-                                    .attr('name', this.name)
-                                    .val(this.value)
+                                    $('<input>')
+                                            .attr('type', 'hidden')
+                                            .attr('name', this.name)
+                                            .val(this.value)
                             );
                         }
                     });
                 });
 
 
-
-
                 /*$('#myForm').on('submit',function(e){
-                    var form = this;
-                    var rowsel = table.column(0).checkboxes.selected();
-                    $.each(rowsel, function(index, rowId){
-                        $(form).append(
-                            $('<input>').attr('type','hidden').attr('name','id[]').val(rowId)
-                        );
-                        $("#view-rows").text(rowsel.join(","))
-                        $("#view-form").text($(form).serialize())
-                        $('input[name="id\[\]"]', form).remove()
-                        e.preventDefault()
+                 var form = this;
+                 var rowsel = table.column(0).checkboxes.selected();
+                 $.each(rowsel, function(index, rowId){
+                 $(form).append(
+                 $('<input>').attr('type','hidden').attr('name','id[]').val(rowId)
+                 );
+                 $("#view-rows").text(rowsel.join(","))
+                 $("#view-form").text($(form).serialize())
+                 $('input[name="id\[\]"]', form).remove()
+                 e.preventDefault()
 
-                    });
-                });*/
-
+                 });
+                 });*/
 
 
                 //-------------------------------------------------

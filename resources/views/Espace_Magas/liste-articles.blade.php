@@ -32,7 +32,7 @@
             @endif
 
             <table id="myTable" class="table table-striped table-bordered table-hover">
-                <thead bgcolor="#F6F2EB">
+                <thead>
                 <tr>
 
                     <th>Reference</th>
@@ -49,12 +49,12 @@
                 </tr>
                 </thead>
                 @if( !$data->isEmpty() )
-                    <tfoot bgcolor="#F6F2EB">
+                    <tfoot>
                     <tr>
 
                         <th>Reference</th>
                         <th>Code</th>
-                        <th> Designation</th>
+                        <th>Designation</th>
                         <th>Categorie</th>
                         <th>Fournisseur</th>
                         <th>Marque</th>

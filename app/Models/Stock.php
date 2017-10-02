@@ -197,7 +197,7 @@ class Stock extends Model
             }
         }
         if (!$hasData)
-            return redirect()->back()->withInput()->withAlertInfo("Remplissez les formulaires dans les onglets <b>Stock</b>");
+            return redirect()->back()->withInput()->withAlertInfo("veuillez saisir les quantités.");
         //--------------------------------------------------------------------------------------------------------------
 
         //Creation d'une transaction -----------------------------------------------------------------------------------
@@ -261,7 +261,7 @@ class Stock extends Model
             }
         }
         if (!$hasData)
-            return redirect()->back()->withInput()->withAlertInfo("Remplissez les formulaires dans les onglets <b>Stock</b>");
+            return redirect()->back()->withInput()->withAlertInfo("veuillez saisir les quantités à transférer");
         //--------------------------------------------------------------------------------------------------------------
 
         //Creation d'une transaction -----------------------------------------------------------------------------------
@@ -294,6 +294,8 @@ class Stock extends Model
             }
         }
         //--------------------------------------------------------------------------------------------------------------
+        Stock_taille::deleteEmptyItems();
+
         return redirect()->back()->withAlertSuccess("Sortie de stock effectuée avec succès");
     }
 
@@ -323,7 +325,7 @@ class Stock extends Model
             }
         }
         if (!$hasData)
-            return redirect()->back()->withInput()->withAlertInfo("Remplissez les formulaires dans les onglets <b>Stock</b>");
+            return redirect()->back()->withInput()->withAlertInfo("veuillez saisir les quantités à transférer");
         //--------------------------------------------------------------------------------------------------------------
 
         //Creation d'une transaction -----------------------------------------------------------------------------------
@@ -421,7 +423,7 @@ class Stock extends Model
             }
         }
         if (!$hasData)
-            return redirect()->back()->withInput()->withAlertInfo("Remplissez les formulaires dans les onglets <b>Stock</b>");
+            return redirect()->back()->withInput()->withAlertInfo("veuillez saisir les quantités à transférer");
         //--------------------------------------------------------------------------------------------------------------
 
         //Creation d'une transaction -----------------------------------------------------------------------------------
@@ -479,7 +481,7 @@ class Stock extends Model
 
                         //Creer une nouvelle ligne dans: trans_article -------------------------------------------------
                         Trans_article::create($id_transaction, self::getIdArticle($id_stock_source), $id_taille_article, $quantite);
-                          //Trans_article::create($id_transaction, $id_article ,$id_taille_article, $quantite);
+                        //Trans_article::create($id_transaction, $id_article ,$id_taille_article, $quantite);
                         //----------------------------------------------------------------------------------------------
 
                     }
