@@ -16,6 +16,19 @@
     </ol>
 
     <div class="row">
+        @if( !$data->isEmpty() )
+            <div class="breadcrumb">
+                Afficher/Masquer:
+                <a class="toggle-vis" data-column="0">Reference</a> -
+                <a class="toggle-vis" data-column="1">Code</a> -
+                <a class="toggle-vis" data-column="2">Designation</a> -
+                <a class="toggle-vis" data-column="4">Marque</a> -
+                <a class="toggle-vis" data-column="5">Categorie</a>
+            </div>
+        @endif
+    </div>
+
+    <div class="row">
         <div class="table-responsive">
             <div class="col-lg-12">
 
@@ -228,8 +241,8 @@
 
                                                                             <td align="right">{{ \App\Models\Taille_article::getTaille($taille->id_taille_article) }}</td>
                                                                             <td align="right">{{ $taille->quantite }}</td>
-                                                                            <td><input type="number" min="0" placeholder="Quantite"
-                                                                                       width="5" class="form-control"
+                                                                            <td><input type="number" min="0" placeholder="Quantite" width="5"
+                                                                                       class="form-control"
                                                                                        name="quantiteIN[{{ $item->id_stock }}][{{ $loop->index+1 }}]"
                                                                                        value="{{ old('quantiteIN.'.($item->id_stock).'.'.($loop->index+1).'') }}">
                                                                             </td>
@@ -240,8 +253,7 @@
                                                                 </tbody>
                                                                 <tfoot>
                                                                 <td colspan="3" align="center">
-                                                                    <button id="addRow_{{ $loop->index+1 }}"
-                                                                            form="NotFormSubmiForm"
+                                                                    <button id="addRow_{{ $loop->index+1 }}" form="NotFormSubmiForm"
                                                                             class="btn btn-outline btn-primary btn-sm"
                                                                             {!! $loop->index==0 ?  setPopOverDown("","Cliquez ici pour ajouter une nouvelle taille pour cet article") : setPopOver("","Cliquez ici pour ajouter une nouvelle taille pour cet article") !!}>
                                                                         Ajouter une taille
@@ -254,10 +266,7 @@
                                                 </div>
 
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default"
-                                                            data-dismiss="modal">
-                                                        Fermer
-                                                    </button>
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -265,12 +274,10 @@
                                 </td>
                             </tr>
 
-
-
                             <script type="text/javascript" charset="utf-8">
                                 $(document).ready(function () {
 
-                                    var t_{{$loop->index+1}}             = $('#example_{{$loop->index+1}}').DataTable({
+                                    var t_{{$loop->index+1}}              = $('#example_{{$loop->index+1}}').DataTable({
                                         "ordering": false,
                                         "paging": false,
                                         "searching": false,
@@ -403,7 +410,7 @@
                         {"width": "05%", "targets": 1, "type": "string", "visible": true},  //ref
                         //{"width": "05%", "targets": 2, "type": "string", "visible": true},  //code
 
-                        {"width": "05%", "targets": 3, "type": "string", "visible": true},    //desi
+                        {"width": "05%", "targets": 3, "type": "string", "visible": false},    //desi
                         {"width": "08%", "targets": 4, "type": "string", "visible": false},     //Marque
                         {"width": "08%", "targets": 5, "type": "string", "visible": false},     //caegorie
 

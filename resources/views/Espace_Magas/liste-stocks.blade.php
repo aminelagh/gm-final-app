@@ -35,7 +35,7 @@
                 <a class="toggle-vis" data-column="1">Code</a> -
                 <a class="toggle-vis" data-column="2">Designation</a> -
                 <a class="toggle-vis" data-column="3">Marque</a> -
-                <a class="toggle-vis" data-column="4">Categorie</a> -
+                <a class="toggle-vis" data-column="4">Categorie</a>
             </div>
         @endif
     </div>
@@ -46,10 +46,9 @@
                 <table id="myTable" class="table table-striped table-bordered table-hover">
                     <thead>
                     <tr>
-
                         <th rowspan="2">Reference</th>
                         <th rowspan="2">Code</th>
-                        <th rowspan="2">Designation</th>
+                        <th rowspan="2">Désignation</th>
                         <th rowspan="2">Marque</th>
                         <th rowspan="2">Categorie</th>
                         <th colspan="2">Prix de gros</th>
@@ -70,7 +69,7 @@
 
                         <th>Reference</th>
                         <th>Code</th>
-                        <th>Designation</th>
+                        <th>Désignation</th>
                         <th>Marque</th>
                         <th>Categorie</th>
                         <th>HT</th>
@@ -84,21 +83,18 @@
                     <tbody>
                     @foreach( $data as $item )
                         <tr ondblclick="window.open('{{ Route('magas.stock',[ 'p_id' => $item->id_stock ]) }}');">
-
-
                             <td>
-                                {{ \App\Models\Article::getRef($item->id_article) }}
-                                {{ \App\Models\Article::getAlias($item->id_article)!=null ? ' - '.\App\Models\Article::getAlias($item->id_article):' ' }}
+                                {{ $item->ref }}
+                                {{ $item->alias!=null ? ' - '.$item->alias:' ' }}
                             </td>
-                            <td>{{ \App\Models\Article::getCode($item->id_article) }}</td>
+                            <td>{{ $item->code }}</td>
                             <td>
-                                @if( App\Models\Article::getImage($item->id_article) != null) <img
-                                        src="{{ asset(App\Models\Article::getImage($item->id_article)) }}"
-                                        width="40px">@endif
-                                {{ \App\Models\Article::getDesignation($item->id_article) }}
+                                @if( $item->image != null)
+                                    <img src="{{ asset($item->image) }}" width="40px">@endif
+                                {{ $item->designation }}
                             </td>
-                            <td>{{ \App\Models\Article::getMarque($item->id_article) }}</td>
-                            <td>{{ \App\Models\Article::getCategorie($item->id_article) }}</td>
+                            <td>{{ $item->libelle_m }}</td>
+                            <td>{{ $item->libelle_c }}</td>
                             <td align="right">{{ \App\Models\Article::getPrixHT($item->id_article) }}</td>
                             <td align="right">{{ \App\Models\Article::getPrixTTC($item->id_article) }}</td>
                             <td align="right">{{ \App\Models\Article::getPrixHT($item->id_article) }}</td>
@@ -133,7 +129,7 @@
                                                         aria-label="Close"><span
                                                             aria-hidden="true">&times;</span></button>
                                                 <h3 class="modal-title" id="gridSystemModalLabel">
-                                                    <b>{{ \App\Models\Article::getDesignation($item->id_article) }}</b>
+                                                    <b>{{ $item->designation }}</b>
                                                 </h3>
                                             </div>
                                             <div class="modal-body">
@@ -142,32 +138,32 @@
                                                         <table class="table table-striped table-bordered table-hover">
                                                             <tr>
                                                                 <td>Reference</td>
-                                                                <th>{{ \App\Models\Article::getRef($item->id_article) }}
-                                                                    {{ \App\Models\Article::getAlias($item->id_article)!=null ? ' - '.\App\Models\Article::getAlias($item->id_article):' ' }}</th>
+                                                                <th>{{ $item->ref }}
+                                                                    {{ $item->alias!=null ? ' - '.$item->alias:' ' }}</th>
                                                             </tr>
                                                             <tr>
                                                                 <td>Code</td>
-                                                                <th>{{ \App\Models\Article::getCode($item->id_article) }}</th>
+                                                                <th>{{ $item->code }}</th>
                                                             </tr>
                                                             <tr>
                                                                 <td>Marque</td>
-                                                                <th>{{ \App\Models\Article::getMarque($item->id_article) }}</th>
+                                                                <th>{{ $item->libelle_m }}</th>
                                                             </tr>
                                                             <tr>
                                                                 <td>Categorie</td>
-                                                                <th>{{ \App\Models\Article::getCategorie($item->id_article) }}</th>
+                                                                <th>{{ $item->libelle_c }}</th>
                                                             </tr>
                                                             <tr>
                                                                 <td>Fournisseur</td>
-                                                                <th>{{ \App\Models\Article::getFournisseur($item->id_article) }}</th>
+                                                                <th>{{ $item->libelle_f }}</th>
                                                             </tr>
                                                             <tr>
                                                                 <td>Couleur</td>
-                                                                <th>{{ \App\Models\Article::getCouleur($item->id_article) }}</th>
+                                                                <th>{{ $item->couleur }}</th>
                                                             </tr>
                                                             <tr>
                                                                 <td>Sexe</td>
-                                                                <th>{{ \App\Models\Article::getSexe($item->id_article) }}</th>
+                                                                <th>{{ $item->sexe }}</th>
                                                             </tr>
                                                             <tr>
                                                                 <td colspan="2" align="center">Prix de vente</td>
@@ -192,8 +188,8 @@
                                                                 </th>
                                                             </tr>
                                                         </table>
-                                                        @if( \App\Models\Article::getImage($item->id_article) != null)
-                                                            <img src="{{ asset(\App\Models\Article::getImage($item->id_article)) }}"
+                                                        @if( $item->image != null)
+                                                            <img src="{{ asset($item->image) }}"
                                                                  width="150px">
                                                         @endif
                                                     </div>
@@ -261,25 +257,21 @@
                     "info": false,
                     stateSave: false,
                     "columnDefs": [
-                        {"visible": true, "targets": -1},
+                        {"width": "05%", "targets": 0, "type": "string", "visible": true},  //ref
+                        {"width": "05%", "targets": 1, "type": "string", "visible": true},  //code
 
-                        //{"searchable": false, "orderable": false, "targets": 1},
-                        //{"width": "04%", "targets": 0, "type": "num", "visible": false, "searchable": false}, //#
-                        {"width": "05%", "targets": 1, "type": "string", "visible": true},  //ref
-                        {"width": "05%", "targets": 2, "type": "string", "visible": true},  //code
+                        //{"width": "08%", "targets": 2, "type": "string", "visible": true},    //desi
+                        {"width": "08%", "targets": 3, "type": "string", "visible": false},     //Marque
+                        {"width": "08%", "targets": 4, "type": "string", "visible": false},     //caegorie
 
-                        {"width": "08%", "targets": 3, "type": "string", "visible": true},    //desi
-                        {"width": "08%", "targets": 4, "type": "string", "visible": true},     //Marque
-                        {"width": "08%", "targets": 5, "type": "string", "visible": false},     //caegorie
+                        {"width": "02%", "targets": 5, "type": "string", "visible": true},      //HT
+                        {"width": "02%", "targets": 6, "type": "num-fmt", "visible": true},     //TTC
+                        {"width": "02%", "targets": 7, "type": "string", "visible": true},      //HT
+                        {"width": "02%", "targets": 8, "type": "num-fmt", "visible": true},     //TTC
 
-                        {"width": "02%", "targets": 6, "type": "string", "visible": true},      //HT
-                        {"width": "02%", "targets": 7, "type": "num-fmt", "visible": true},     //TTC
-                        {"width": "02%", "targets": 8, "type": "string", "visible": true},      //HT
-                        {"width": "02%", "targets": 9, "type": "num-fmt", "visible": true},     //TTC
+                        {"width": "05%", "targets": 9, "type": "num-fmt", "visible": true},     //etat
 
-                        //{"width": "05%", "targets": 9, "type": "num-fmt", "visible": true},     //etat
-
-                        //{"width": "04%", "targets": 11, "type": "num-fmt", "visible": true, "searchable": false}
+                        {"width": "04%", "targets": 10, "type": "num-fmt", "visible": true, "searchable": false}
                     ],
                     "select": {
                         items: 'column'

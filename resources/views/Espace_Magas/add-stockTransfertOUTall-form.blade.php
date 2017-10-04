@@ -95,7 +95,7 @@
             <div class="col-lg-12">
                 {{-- *************** form ***************** --}}
                 <form role="form" name="myForm" id="myForm" method="post"
-                      action="{{ Route('magas.submitAddStockOUT') }}">
+                      action="{{ Route('magas.submitAddStockTransfertOUT') }}">
                     {{ csrf_field() }}
                     <input type="hidden" name="id_magasin" value="{{ $magasin_source->id_magasin }}"/>
 
@@ -277,7 +277,7 @@
                                                                         </tr>
                                                                     @endforeach
                                                                     <tr>
-                                                                        <th colspan="2">Quantité</th>
+                                                                        <th colspan="2">QuantitÃ©</th>
                                                                         <td><input type="number" readonly class="form-control"
                                                                                    id="sommeQ_{{ $loop->iteration }}" value="0"></td>
                                                                     </tr>
@@ -314,10 +314,11 @@
                         </tbody>
                     </table>
 
-                    <div class="row" align="center">
 
+                    <div class="row">
+                        <div class="col-lg-4"></div>
+                        {{-- magasin destination --}}
                         <div class="col-lg-4">
-                            {{-- magasin destination --}}
                             <div class="form-group">
                                 <label>Magasin destination</label>
                                 <select class="form-control" name="id_magasin_destination">
@@ -331,25 +332,21 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg-4">
-                            <input type="submit" value="Valider le transfert" formtarget="_blank"
-                                   class="btn btn-outline btn-success">
-                        </div>
+                        <div class="col-lg-4"></div>
                     </div>
-
                     <div class="row">
-                        <input type="submit" value="Valider" class="btn btn-primary center-block">
+                        <div class="col-lg-4"></div>
+                        <div class="col-lg-4">
+                            <input type="submit" value="Valider" class="btn btn-outline btn-success">
+                        </div>
+                        <div class="col-lg-4"></div>
                     </div>
                 </form>
-
             </div>
+
         </div>
     </div>
-
-    <br/>
-
-    <hr/>
-    <br/>
+    <hr>
 @endsection
 
 @section('scripts')

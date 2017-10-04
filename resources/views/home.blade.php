@@ -20,7 +20,7 @@
     <!-- Custom Fonts -->
     <link href="home-resources/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
-  <link rel="shortcut icon" href="{{{ asset('img/golfmaroc.ico') }}}">
+    <link rel="shortcut icon" href="{{ asset('img/logo_gm.png') }}">
 </head>
 
 <body>
@@ -37,7 +37,7 @@
             <a href="#top" onclick=$("#menu-close").click();>Accueul</a>
         </li>
         <li>
-            <a href="{{ Route('login') }}" >Se connecter</a>
+            <a href="{{ Route('login') }}">Se connecter</a>
         </li>
         <li>
             <a href="#contact" onclick=$("#menu-close").click();>Contact</a>
@@ -49,12 +49,12 @@
 <header id="top" class="header">
     <div class="text-vertical-center">
         <h1>Bienvenue a GolfMaroc-App</h1>
+
         <h3>Votre Application Gestion de stock des différents Proshops du groupe GolfMaroc</h3>
         <br>
         <a href="{{ Route('login') }}" class="btn btn-dark btn-lg">Se connecter</a>
     </div>
 </header>
-
 
 
 <!-- Footer -->
@@ -64,6 +64,7 @@
             <div class="col-lg-10 col-lg-offset-1 text-center">
                 <h4><strong>Golf Maroc</strong>
                 </h4>
+
                 <p>Magasin N 3A Bloc A1
                     <br>Résidence Tifaouine Av. Moukaouama - Agadir</p>
                 <ul class="list-unstyled">
@@ -98,18 +99,18 @@
 <!-- Custom Theme JavaScript -->
 <script>
     // Closes the sidebar menu
-    $("#menu-close").click(function(e) {
+    $("#menu-close").click(function (e) {
         e.preventDefault();
         $("#sidebar-wrapper").toggleClass("active");
     });
     // Opens the sidebar menu
-    $("#menu-toggle").click(function(e) {
+    $("#menu-toggle").click(function (e) {
         e.preventDefault();
         $("#sidebar-wrapper").toggleClass("active");
     });
     // Scrolls to the selected menu item on the page
-    $(function() {
-        $('a[href*=#]:not([href=#],[data-toggle],[data-target],[data-slide])').click(function() {
+    $(function () {
+        $('a[href*=#]:not([href=#],[data-toggle],[data-target],[data-slide])').click(function () {
             if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') || location.hostname == this.hostname) {
                 var target = $(this.hash);
                 target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
@@ -124,12 +125,12 @@
     });
     //#to-top button appears after scrolling
     var fixed = false;
-    $(document).scroll(function() {
+    $(document).scroll(function () {
         if ($(this).scrollTop() > 250) {
             if (!fixed) {
                 fixed = true;
                 // $('#to-top').css({position:'fixed', display:'block'});
-                $('#to-top').show("slow", function() {
+                $('#to-top').show("slow", function () {
                     $('#to-top').css({
                         position: 'fixed',
                         display: 'block'
@@ -139,7 +140,7 @@
         } else {
             if (fixed) {
                 fixed = false;
-                $('#to-top').hide("slow", function() {
+                $('#to-top').hide("slow", function () {
                     $('#to-top').css({
                         display: 'none'
                     });
@@ -150,13 +151,13 @@
     // Disable Google Maps scrolling
     // See http://stackoverflow.com/a/25904582/1607849
     // Disable scroll zooming and bind back the click event
-    var onMapMouseleaveHandler = function(event) {
+    var onMapMouseleaveHandler = function (event) {
         var that = $(this);
         that.on('click', onMapClickHandler);
         that.off('mouseleave', onMapMouseleaveHandler);
         that.find('iframe').css("pointer-events", "none");
     }
-    var onMapClickHandler = function(event) {
+    var onMapClickHandler = function (event) {
         var that = $(this);
         // Disable the click handler until the user leaves the map area
         that.off('click', onMapClickHandler);

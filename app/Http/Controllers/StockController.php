@@ -44,7 +44,15 @@ class StockController extends Controller
         if ($p_id == 1)
             return redirect()->back()->withInput()->withAlertInfo("Vous ne pouvez pas accéder à ce magasin de cette manière.");
 
-        $data = Stock::where('id_magasin', $p_id)->get();
+        //$data = Stock::where('id_magasin', $p_id)->get();
+        $data = collect(DB::select("
+            SELECT s.*,a.designation,a.code,a.ref,a.alias,a.couleur,a.sexe,a.image,
+                  c.libelle as libelle_c, m.libelle as libelle_m, f.libelle as libelle_f
+            FROM Stocks s LEFT JOIN articles a on s.id_article=a.id_article
+                          LEFT JOIN categories c on a.id_categorie=c.id_categorie
+                          LEFT JOIN fournisseurs f on a.id_fournisseur=f.id_fournisseur
+                          LEFT JOIN marques m on a.id_marque=m.id_marque
+            WHERE s.id_magasin=" . $p_id . " order by a.id_article;"));
         $magasin = Magasin::find($p_id);
         $tailles = Taille_article::all();
 
@@ -99,9 +107,6 @@ class StockController extends Controller
     //Stock IN for main magasin ----------------------------------------------------------------------------------------
     public function addStockIN()
     {
-        $p_id_magasin = 1;//Session::get('id_magasin');
-        //$data = Stock::where('id_magasin', $p_id_magasin)->get();
-
         $data = collect(DB::select("
             SELECT s.*,a.designation,a.code,a.ref,a.alias,a.couleur,a.sexe,a.image,
                   c.libelle as libelle_c, m.libelle as libelle_m, f.libelle as libelle_f
@@ -109,7 +114,7 @@ class StockController extends Controller
                           LEFT JOIN categories c on a.id_categorie=c.id_categorie
                           LEFT JOIN fournisseurs f on a.id_fournisseur=f.id_fournisseur
                           LEFT JOIN marques m on a.id_marque=m.id_marque
-            WHERE s.id_magasin=" . 1 . " order by a.id_article;"));
+            WHERE s.id_magasin=1 order by a.id_article;"));
 
         if ($data->isEmpty())
             return redirect()->back()->withInput()->withAlertWarning("Cet element du stock n'existe pas.");
@@ -136,7 +141,7 @@ class StockController extends Controller
                           LEFT JOIN categories c on a.id_categorie=c.id_categorie
                           LEFT JOIN fournisseurs f on a.id_fournisseur=f.id_fournisseur
                           LEFT JOIN marques m on a.id_marque=m.id_marque
-            WHERE s.id_magasin=" . 1 . " order by a.id_article;"));
+            WHERE s.id_magasin=1 order by a.id_article;"));
 
         if ($data->isEmpty())
             return redirect()->back()->withAlertWarning("Le stock du magasin est vide, veuillez commencer par l'alimenter.");
@@ -162,7 +167,7 @@ class StockController extends Controller
                           LEFT JOIN categories c on a.id_categorie=c.id_categorie
                           LEFT JOIN fournisseurs f on a.id_fournisseur=f.id_fournisseur
                           LEFT JOIN marques m on a.id_marque=m.id_marque
-            WHERE s.id_magasin=" . 1 . " order by a.id_article;"));
+            WHERE s.id_magasin=1 order by a.id_article;"));
         if ($data->isEmpty())
             return redirect()->back()->withInput()->withAlertWarning("Le stock du magasin principal est vide, veuillez commencer par l'alimenter avant de procéder à un transfert.");
 
@@ -184,7 +189,7 @@ class StockController extends Controller
                           LEFT JOIN categories c on a.id_categorie=c.id_categorie
                           LEFT JOIN fournisseurs f on a.id_fournisseur=f.id_fournisseur
                           LEFT JOIN marques m on a.id_marque=m.id_marque
-            WHERE s.id_magasin=" . 1 . " order by a.id_article;"));
+            WHERE s.id_magasin=1 order by a.id_article;"));
 
         if ($data->isEmpty())
             return redirect()->back()->withInput()->withAlertWarning("Le stock du magasin principal est vide, veuillez commencer par l'alimenter avant de procéder à un transfert.");
@@ -196,7 +201,7 @@ class StockController extends Controller
         $magasinSource = Magasin::find(1);
         $tailles = Taille_article::all();
 
-        return view('Espace_Magas.add-stockTransfertOUT-form')->withMagasinSource($magasinSource)->withMagasinDestination($magasinDestination)->withData($data)->withTailles($tailles);
+        return view('Espace_Magas.add-stockTransfertOUT-form')->withMagasinSource($magasinSource)->withMagasinDestination($magasinDestination)->withData($data);//->withTailles($tailles);
     }
 
     public function submitAddStockTransfertOUT()
@@ -209,7 +214,15 @@ class StockController extends Controller
     public function addStockTransfertIN($p_id_magasin_source)
     {
         //return back()->withAlertInfo("Transfert IN is not set for the moment.");
-        $data = Stock::where('id_magasin', $p_id_magasin_source)->get();
+        //$data = Stock::where('id_magasin', $p_id_magasin_source)->get();
+        $data = collect(DB::select("
+            SELECT s.*,a.designation,a.code,a.ref,a.alias,a.couleur,a.sexe,a.image,
+                  c.libelle as libelle_c, m.libelle as libelle_m, f.libelle as libelle_f
+            FROM Stocks s LEFT JOIN articles a on s.id_article=a.id_article
+                          LEFT JOIN categories c on a.id_categorie=c.id_categorie
+                          LEFT JOIN fournisseurs f on a.id_fournisseur=f.id_fournisseur
+                          LEFT JOIN marques m on a.id_marque=m.id_marque
+            WHERE s.id_magasin=".$p_id_magasin_source." order by a.id_article;"));
         if ($data->isEmpty())
             return redirect()->back()->withInput()->withAlertWarning("Le stock du magasin <b>" . Magasin::getLibelle($p_id_magasin_source) . "</b> est vide, veuillez commencer par l'alimenter avant de procéder à un transfert.");
 

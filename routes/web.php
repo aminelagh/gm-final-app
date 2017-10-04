@@ -1,19 +1,22 @@
 <?php
 
 
+
+
+/**
+ * Authentification
+ **/
+Route::get('/login', 'AuthController@login')->name('login');
+Route::post('/login', 'AuthController@submitLogin')->name('submitLogin');
+Route::get('/logout', 'AuthController@logout')->name('logout');
+/*********************************************************************************/
+
 Route::get('/', function () {
     return view('home');
 })->name('home');
 Route::get('/home', function () {
     return view('home');
 })->name('home');
-
-Route::get('/e', function () {
-
-    Notification::send(\App\Models\User::first(),
-        new \App\Notifications\DeleteMagasinNotification("amine.laghlabi@gmail.com"));
-});
-
 
 Route::get('/session', function () {
     dump(session()->all());
@@ -276,13 +279,7 @@ Route::group(['middleware' => 'vend'], function () {
 });
 
 
-/**
- * Authentification
- **/
-Route::get('/login', 'AuthController@login')->name('login');
-Route::post('/login', 'AuthController@submitLogin')->name('submitLogin');
-Route::get('/logout', 'AuthController@logout')->name('logout');
-/*********************************************************************************/
+
 
 
 /**
@@ -296,11 +293,3 @@ Route::get('/logout', 'AuthController@logout')->name('logout');
  **/
 Route::get('/export/{p_table}', 'ExcelController@export')->name('export');
 /*********************************************************************************/
-
-
-/***************************************
- * Direct routes protected by directMiddleware
- ***************************************
- * Route::group(['middleware' => 'direct'], function () {
- * Route::get('/direct', 'DirectController@home')->name('direct.home');
- * });*/

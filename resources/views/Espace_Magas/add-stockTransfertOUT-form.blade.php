@@ -1,18 +1,17 @@
 @extends('layouts.main_master')
 
-@section('title') Stock du main magasin: {{ $magasin->libelle }}  @endsection
+@section('title') Transfert  de {{ $magasin_source->libelle }} vers {{ $magasin_destination->libelle }} @endsection
 
 @section('main_content')
 
-    <h3 class="page-header">Sortie de stock du magasin principal:
-        <strong>{{ $magasin->libelle }}</strong></h3>
+    <h3 class="page-header">Transfert de stock de <b>{{ $magasin_source->libelle }}</b> vers <b>{{ $magasin_destination->libelle }}</b></h3>
 
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ route('magas.home') }}">Dashboard</a></li>
         <li class="breadcrumb-item">Gestion des magasins</li>
-        <li class="breadcrumb-item"><a href="{{ route('magas.magasin') }}">{{ $magasin->libelle  }}</a></li>
-        <li class="breadcrumb-item active"><a href="{{ route('magas.stocks') }}">Stock</a></li>
-        <li class="breadcrumb-item active"><a href="{{ route('magas.addStockOUT') }}">sortie de stock</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('magas.magasin',[$magasin_destination->id_magasin]) }}">{{ $magasin_destination->libelle  }}</a></li>
+        <li class="breadcrumb-item active"><a href="{{ route('magas.stocks',[$magasin_destination->id_magasin]) }}">Stock</a></li>
+        <li class="breadcrumb-item active">Transfert de stock</li>
     </ol>
 
     <div class="row">
@@ -21,7 +20,7 @@
                 Afficher/Masquer:
                 <a class="toggle-vis" data-column="1">Reference</a> -
                 <a class="toggle-vis" data-column="2">Code</a> -
-                <a class="toggle-vis" data-column="3">Designation</a> -
+                <a class="toggle-vis" data-column="3">Désignation</a> -
                 <a class="toggle-vis" data-column="4">Marque</a> -
                 <a class="toggle-vis" data-column="5">Categorie</a>
             </div>
@@ -98,16 +97,17 @@
             <div class="col-lg-12">
                 {{-- *************** form ***************** --}}
                 <form role="form" name="myForm" id="myForm" method="post"
-                      action="{{ Route('magas.submitAddStockOUT') }}">
+                      action="{{ Route('magas.submitAddStockTransfertOUT') }}">
                     {{ csrf_field() }}
-                    <input type="hidden" name="id_magasin" value="{{ $magasin->id_magasin }}"/>
+                    <input type="hidden" name="id_magasin_source" value="{{ $magasin_source->id_magasin }}"/>
+                    <input type="hidden" name="id_magasin_destination" value="{{ $magasin_destination->id_magasin }}"/>
 
                     <table id="myTable" class="table table-striped table-bordered table-hover">
                         <thead>
                         <tr>
                             <th rowspan="2">Reference</th>
                             <th rowspan="2">Code</th>
-                            <th rowspan="2">Designation</th>
+                            <th rowspan="2">Désignation</th>
                             <th rowspan="2">Marque</th>
                             <th rowspan="2">Categorie</th>
                             <th colspan="2">Prix de gros</th>
@@ -127,7 +127,7 @@
                         <tr>
                             <th>Reference</th>
                             <th>Code</th>
-                            <th>Designation</th>
+                            <th>Désignation</th>
                             <th>Marque</th>
                             <th>Categorie</th>
                             <th>HT</th>
@@ -235,12 +235,10 @@
                                                                 </tr>
                                                                 <tr>
                                                                     <td>Prix de vente</td>
-                                                                    <th>{{ \App\Models\Article::getPrixHT($item->id_article) }}
-                                                                        Dhs HT
+                                                                    <th>{{ \App\Models\Article::getPrixHT($item->id_article) }} Dhs HT
                                                                     </th>
                                                                     <th>
-                                                                        {{ \App\Models\Article::getPrixTTC($item->id_article) }}
-                                                                        Dhs TTC
+                                                                        {{ \App\Models\Article::getPrixTTC($item->id_article) }} Dhs TTC
                                                                     </th>
                                                                 </tr>
                                                             </table>
@@ -280,7 +278,7 @@
                                                                         </tr>
                                                                     @endforeach
                                                                     <tr>
-                                                                        <th colspan="2">Quantit�</th>
+                                                                        <th colspan="2">Quantité</th>
                                                                         <td><input type="number" readonly class="form-control"
                                                                                    id="sommeQ_{{ $loop->iteration }}" value="0"></td>
                                                                     </tr>
@@ -299,10 +297,7 @@
                                                     </div>
 
                                                     <div class="modal-footer">
-                                                        <button type="button" class="btn btn-default"
-                                                                data-dismiss="modal">
-                                                            Fermer
-                                                        </button>
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
                                                     </div>
                                                 </div>
                                             </div>

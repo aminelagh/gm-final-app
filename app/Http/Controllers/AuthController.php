@@ -14,6 +14,7 @@ class AuthController extends Controller
 {
     public function login()
     {
+        //return 'a';
         if (!Sentinel::check()) {
             return view('login');
         }
@@ -22,11 +23,11 @@ class AuthController extends Controller
             return redirect()->route('admin.home');//->with('error', 'You are a customer and cannot access to backend section');
         else if (Sentinel::inRole('magas'))
             return redirect()->route('magas.home');
-        else if (Sentinel::inRole('direct'))
-            return redirect()->route('direct.home');
+        //else if (Sentinel::inRole('direct'))
+            //return redirect()->route('direct.home');
         else if (Sentinel::inRole('vend'))
             return redirect()->route('vend.home');
-        else echo "Error Login AuthController";
+        else return redirect()->back()->withAlertDanger("Erreur d'authentification !");//echo "Error Login AuthController";
 
     }
 
