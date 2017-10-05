@@ -48,7 +48,7 @@
                         @foreach( $data as $item )
                             <tr>
                                 <td>
-                                    <a href="{{ route('admin.magasin',['p_id'=>$item->id_magasin]) }}" {!! setPopOver("","Details magasin") !!}>{{ $item->libelle }}
+                                    <a href="{{ route('admin.magasin',['p_id'=>$item->id_magasin]) }}" {!! setPopOver("","Details magasin") !!}>{{ $item->libelle_magasin }}
                                         <small>({{ $item->ville }})</small>
                                     </a>
                                 </td>
@@ -193,7 +193,11 @@
         <a href="{{ Route('admin.addPromotions') }}" type="button"
            class="btn btn-outline btn-default" {!! setPopOver("","Ajouter de nouvelles promotions") !!}>
             <i class="glyphicon glyphicon-plus "></i> Ajouter des promotions</a>
+        <a href="{{ Route('admin.export',['promotions']) }}" type="button"
+           class="btn btn-outline btn-default" {!! setPopOver("","Exporter la liste des promotions") !!}>Exporter</a>
     </div>
+
+
 
 
 @endsection

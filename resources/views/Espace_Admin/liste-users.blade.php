@@ -16,7 +16,7 @@
                     <th>Ville</th>
                     <th>Email</th>
                     <th>Magasin</th>
-                    <th>Actions</th>
+                    <th>Details</th>
                 </tr>
                 </thead>
                 <tfoot>
@@ -112,11 +112,7 @@
                                                     </a>
                                                 </div>
                                                 <div class="col-lg-4">
-                                                    <button type="button" class="btn btn-info btn-outline"
-                                                            data-dismiss="modal">
-                                                        Fermer
-                                                    </button>
-
+                                                    <button type="button" class="btn btn-info btn-outline" data-dismiss="modal">Fermer</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -135,8 +131,9 @@
 
     <div class="row" align="center">
         <a href="{{ Route('admin.addUser') }}" type="button"
-           class="btn btn-outline btn-default" {!! setPopOver("","Créer un nouvel utilisateur") !!}> Ajouter un
-            utilisateur</a>
+           class="btn btn-outline btn-default" {!! setPopOver("","Créer un nouvel utilisateur") !!}> Ajouter un utilisateur</a>
+        <a href="{{ Route('admin.export',['users']) }}" type="button"
+           class="btn btn-outline btn-default" {!! setPopOver("","Exporter la liste des utilisateurs") !!}>Exporter</a>
     </div>
 @endsection
 

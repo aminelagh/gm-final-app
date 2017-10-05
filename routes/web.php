@@ -30,7 +30,6 @@ Route::group(['middleware' => 'admin'], function () {
     //Afficher la page d'accueil ==> Admin
     Route::get('/admin', 'AdminController@home')->name('admin.home');
 
-
     //Profile ----------------------------------------------------------------------------------------------------------
     Route::get('/admin/profile', 'AdminController@profile')->name('admin.profile');
     Route::get('/admin/updatePassword', 'AdminController@updatePassword')->name('admin.updatePassword');
@@ -98,6 +97,7 @@ Route::group(['middleware' => 'admin'], function () {
     //article
     Route::get('/admin/article/{id_article}', 'AdminController@article')->name('admin.article');
     Route::post('/admin/submitUpdateArticle', 'AdminController@submitUpdateArticle')->name('admin.submitUpdateArticle');
+    Route::post('/admin/submitAddArticle', 'AdminController@submitAddArticle')->name('admin.submitAddArticle');
     //------------------------------------------------------------------------------------------------------------------
 
     //Delete -----------------------------------------------------------------------------------------------------------
@@ -106,6 +106,10 @@ Route::group(['middleware' => 'admin'], function () {
 
     Route::delete('admin/promotion/{id}', 'DeleteController@adminPromotion')->name('admin.deletePromotion');
     Route::delete('admin/magasin/{id}', 'DeleteController@adminMagasin')->name('admin.deleteMagasin');
+    //------------------------------------------------------------------------------------------------------------------
+
+    //Export Excel -----------------------------------------------------------------------------------------------------
+    Route::get('admin/export/{p_table}', 'ExcelController@export')->name('admin.export');
     //------------------------------------------------------------------------------------------------------------------
 });
 
@@ -291,5 +295,5 @@ Route::group(['middleware' => 'vend'], function () {
 /**
  * Routes Excel:
  **/
-Route::get('/export/{p_table}', 'ExcelController@export')->name('export');
+
 /*********************************************************************************/

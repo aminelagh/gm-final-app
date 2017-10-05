@@ -60,8 +60,7 @@
                                     <div class="input-group">
                                         <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
                                         <input class="form-control" id="date" name="date_debut" placeholder="jj-mm-aaaa"
-                                               value="{{ (new DateTime($data->date_debut))->format('d-m-Y') }}"
-                                               type="date">
+                                               value="{{ (new DateTime($data->date_debut))->format('d-m-Y') }}" type="date">
                                     </div>
                                 </th>
                             </tr>
@@ -71,8 +70,7 @@
                                     <div class="input-group">
                                         <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
                                         <input class="form-control" id="date" name="date_fin" placeholder="jj-mm-aaaa"
-                                               value="{{ (new DateTime($data->date_fin))->format('d-m-Y') }}"
-                                               type="date">
+                                               value="{{ (new DateTime($data->date_fin))->format('d-m-Y') }}" type="date">
                                     </div>
                                 </th>
                             </tr>

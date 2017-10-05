@@ -1,9 +1,9 @@
 @extends('layouts.main_master')
 
-@section('title') Sorties de stock @endsection
+@section('title') Ventes @endsection
 
 @section('main_content')
-    <h3 class="page-header">Sorties de stock</h3>
+    <h3 class="page-header">Ventes</h3>
 
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ route('admin.home') }}">Dashboard</a></li>
@@ -160,6 +160,11 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+
+        <div class="row" align="center">
+            <a href="{{ Route('admin.export',['ventes']) }}" type="button"
+               class="btn btn-outline btn-default" {!! setPopOver("","Exporter la liste des ventes") !!}>Exporter</a>
         </div>
 
     </div>

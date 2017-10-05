@@ -195,6 +195,13 @@
         </div>
     </div>
 
+    <div class="row" align="center">
+        <a href="{{ Route('admin.addArticle') }}" type="button"
+           class="btn btn-outline btn-default" {!! setPopOver("","Créer un nouvel article") !!}> Ajouter un Article</a>
+        <a href="{{ Route('admin.export',['articles']) }}" type="button"
+           class="btn btn-outline btn-default" {!! setPopOver("","Exporter la liste des articles") !!}>Exporter</a>
+    </div>
+
 
 @endsection
 

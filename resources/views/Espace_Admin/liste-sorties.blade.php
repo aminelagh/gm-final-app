@@ -162,6 +162,10 @@
             </div>
         </div>
 
+        <div class="row" align="center">
+            <a href="{{ Route('admin.export',['sorties']) }}" type="button"
+               class="btn btn-outline btn-default" {!! setPopOver("","Exporter la liste des sorties de stock") !!}>Exporter</a>
+        </div>
     </div>
 @endsection
 

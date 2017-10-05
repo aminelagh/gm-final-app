@@ -71,7 +71,12 @@ class AddController extends Controller
         $fournisseurs = Fournisseur::all();
         $marques = Marque::all();
         $categories = Categorie::all();
-        return view('Espace_Magas.add-article-form')->withFournisseurs($fournisseurs)->withMarques($marques)->withCategories($categories);
+
+        if(session()->get("role")=="admin")
+            return view('Espace_Admin.add-article-form')->withFournisseurs($fournisseurs)->withMarques($marques)->withCategories($categories);
+        elseif(session()->get("role")=="magas")
+            return view('Espace_Magas.add-article-form')->withFournisseurs($fournisseurs)->withMarques($marques)->withCategories($categories);
+        else return redirect()->back()->withAlertDanger("Erreur, vous n'avez pas l'autorisation de creer des articles.");
     }
 
     public function addPromotions()
@@ -271,9 +276,7 @@ class AddController extends Controller
         }
         //$user = User::where('id', Session::get('id_user'))->get()->first();
         //Notification::send(User::first(), new \App\Notifications\AddArticleNotification($user));
-        return redirect()->back()->with('alert_success', "L'article <b>" . request()->get('designation_c') . "</b> a bien été ajouté.");
-
-
+        return redirect()->back()->with('alert_success', "L'article <b>" . request()->get('designation') . "</b> a bien été ajouté.");
     }
 
     public function submitAddMagasin()
@@ -420,9 +423,9 @@ class AddController extends Controller
         if ($error1 || $error2)
             return redirect()->back()->withInput();
         else {
-            $user = User::where('id', Session::get('id_user'))->get()->first();
+            //$user = User::where('id', Session::get('id_user'))->get()->first();
             //Notification::send(User::first(), new \App\Notifications\AddPromotionNotification($user));
-            //return redirect()->back()->withInput()->withAlertSuccess("Creation ou mise a jour des promotions reussit. (" . $nbre_articles . " article(s))");
+            return redirect()->back()->withAlertSuccess("Creation ou mise a jour des promotions reussit. (" . $nbre_articles . " article(s))");
         }
     }
 }

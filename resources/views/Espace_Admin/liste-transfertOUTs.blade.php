@@ -170,6 +170,10 @@
             </div>
         </div>
 
+        <div class="row" align="center">
+            <a href="{{ Route('admin.export',['transfertOUTs']) }}" type="button"
+               class="btn btn-outline btn-default" {!! setPopOver("","Exporter la liste des transferts de stock") !!}>Exporter</a>
+        </div>
     </div>
 @endsection
 

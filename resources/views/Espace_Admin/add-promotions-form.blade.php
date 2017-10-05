@@ -8,7 +8,7 @@
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ route('admin.home') }}">Dashboard</a></li>
         <li class="breadcrumb-item">Gestion des promotions</li>
-        <li class="breadcrumb-item"><a href="{{ route('admin.promotions') }}">Nouvelle vente simple</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.promotions') }}">Promotions</a></li>
         <li class="breadcrumb-item active">Création des promotions</li>
     </ol>
 
@@ -34,7 +34,6 @@
                     <table id="myTable" class="table table-striped table-bordered table-hover">
                         <thead>
                         <tr>
-
                             <th rowspan="2">Reference</th>
                             <th rowspan="2">Code</th>
                             <th rowspan="2">Designation</th>
@@ -180,26 +179,28 @@
                                                                 <tr>
                                                                     <td>
                                                                         <div class="input-group">
-                                                                            <input type="number" pattern="##.##"
-                                                                                   step="0.01" min="0" max="100"
+                                                                            <input type="number" pattern="##.##" step="0.01" min="0" max="100"
                                                                                    name="taux[{{ $loop->iteration }}]"
-                                                                                   value="{{ old('taux.'.($loop->iteration).'') }}"
-                                                                                   class="form-control">
-                                                                            <span class="input-group-addon"
-                                                                                  id="basic-addon2">%</span>
+                                                                                   value="{{ old('taux.'.($loop->iteration).'') }}" class="form-control">
+                                                                            <span class="input-group-addon" id="basic-addon2">%</span>
                                                                         </div>
                                                                     </td>
                                                                     <td>
-                                                                        <input type="date" class="form-control"
-                                                                               
-                                                                               name="date_debut[{{ $loop->iteration }}]"
-                                                                               value="{{ old('date_debut.'.($loop->iteration).'') }}">
+                                                                        <div class="input-group">
+                                                                            <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                                                                            <input class="form-control" id="date" name="date_debut"
+                                                                                   placeholder="jj-mm-aaaa" type="date"
+                                                                                   value="{{ old('dat_debut.'.($loop->iteration).'') }}">
+                                                                        </div>
+
                                                                     </td>
                                                                     <td>
-                                                                        <input type="date" class="form-control"
-                                                                               
-                                                                               name="date_fin[{{ $loop->iteration }}]"
-                                                                               value="{{ old('date_fin.'.($loop->iteration).'') }}">
+                                                                        <div class="input-group">
+                                                                            <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                                                                            <input class="form-control" id="date" name="date_fin[{{ $loop->iteration }}]"
+                                                                                   placeholder="jj-mm-aaaa" type="date"
+                                                                                   value="{{ old('dat_fin.'.($loop->iteration).'') }}">
+                                                                        </div>
                                                                     </td>
                                                                 </tr>
                                                             </table>

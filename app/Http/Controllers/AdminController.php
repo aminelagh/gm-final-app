@@ -374,7 +374,7 @@ class AdminController extends Controller
             //$user = User::where('id', Session::get('id_user'))->get()->first();
             //Notification::send(User::first(), new \App\Notifications\UpdateArticleNotification($user));
 
-            return redirect()->route('admin.articles_nv')->with('alert_success', "Modification de l'utilisateur reussi.");
+            return redirect()->back()->with('alert_success', "Modification de l'article reussi.");
 
         }
     }
@@ -420,20 +420,63 @@ class AdminController extends Controller
         } else return redirect()->back()->withInput();
     }
 
-    /*public function article_nv($p_id)
+    public function submitAddArticle()
     {
-        $data = Article::where('id_article', $p_id)->where('valide', false)->get()->first();
+        $id_categorie = request()->get('id_categorie');
+        $id_marque = request()->get('id_marque');
+        $id_fournisseur = request()->get('id_fournisseur');
+        $ref = request()->get('ref');
+        $alias = request()->get('alias');
+        $code = request()->get('code');
+        $designation = request()->get('designation');
+        $sexe = request()->get('sexe');
+        $couleur = request()->get('couleur');
+        $prix_a = request()->get('prix_a');
+        $prix_v = request()->get('prix_v');
 
-        if ($data == null)
-            return redirect()->back()->with('alert_warning', "L'article choisi n'existe pas ou il a déjà été validé.");
 
-        $marques = Marque::all();
-        $fournisseurs = Fournisseur::all();
-        $categories = Categorie::all();
+        if (Article::CodeExists($code)) {
+            return redirect()->back()->withInput()->with('alert_warning', "le code " . $code . " est deja utilisé pour un autre article");
+        }
 
+        $id_article = Article::getNextID();
 
-        return view('Espace_Admin.info-article')->withData($data)->withMarques($marques)->withFournisseurs($fournisseurs)->withCategories($categories);
-    }*/
+        $item = new Article;
+        $item->id_article = $id_article;
+        $item->id_categorie = $id_categorie;
+        $item->id_fournisseur = $id_fournisseur;
+        $item->id_marque = $id_marque;
+        $item->code = $code;
+        $item->ref = $ref;
+        $item->alias = $alias;
+        $item->designation = $designation;
+        $item->sexe = $sexe;
+        $item->couleur = $couleur;
+        $item->prix_a = $prix_a;
+        $item->prix_v = $prix_v;
+        $item->deleted = false;
+        $item->valide = true;
+
+        //upload Image
+        if (request()->hasFile('image')) {
+            $file_extension = request()->file('image')->extension();
+            //$file_size = request()->file('image')->getSize();
+            $file_name = "article_" . $id_article . "." . $file_extension;
+            request()->file('image')->move("uploads/images/articles", $file_name);
+            $item->image = "/uploads/images/articles/" . $file_name;
+        } else {
+            $item->image = false;
+        }
+
+        try {
+            $item->save();
+        } catch (Exception $ex) {
+            return redirect()->back()->withInput()->with('alert_danger', "Une erreur s'est produite lors de l'ajout de l'article.<br>Message d'erreur: " . $ex->getMessage());
+        }
+        //$user = User::where('id', Session::get('id_user'))->get()->first();
+        //Notification::send(User::first(), new \App\Notifications\AddArticleNotification($user));
+        return redirect()->back()->with('alert_success', "L'article <b>" . request()->get('designation') . "</b> a bien été ajouté.");
+    }
 
     //---------------------------------------------------------------
 
@@ -448,9 +491,13 @@ class AdminController extends Controller
 */
 
         $data = collect(DB::select("
-          SELECT p.*,a.*,m.libelle,m.ville,marques.libelle as libelle_m,fournisseurs.libelle as libelle_f,categories.libelle as libelle_c
-          FROM promotions p LEFT JOIN articles a ON p.id_article=a.id_article, magasins m,fournisseurs,marques,categories
-          WHERE m.id_magasin=p.id_magasin AND fournisseurs.id_fournisseur=a.id_fournisseur AND marques.id_marque=a.id_marque AND categories.id_categorie=a.id_categorie AND p.deleted=false;
+          SELECT p.*,a.*,m.libelle as libelle_magasin,m.ville,marques.libelle as libelle_m,f.libelle as libelle_f,c.libelle as libelle_c
+          FROM promotions p LEFT JOIN articles a ON p.id_article=a.id_article
+                            LEFT JOIN magasins m ON m.id_magasin=p.id_magasin
+                            LEFT JOIN fournisseurs f ON f.id_fournisseur=a.id_fournisseur
+                            LEFT JOIN marques ON marques.id_marque=a.id_marque
+                            LEFT JOIN categories c ON c.id_categorie=a.id_categorie
+          WHERE p.deleted=false;
           "));
 
         return view('Espace_Admin.liste-promotions')->withData($data);
@@ -621,7 +668,6 @@ class AdminController extends Controller
             from ventes v LEFT JOIN magasins m on v.id_magasin=m.id_magasin LEFT JOIN users u on v.id_user=u.id
             ORDER BY id_vente desc
          "));
-
         return view('Espace_Admin.liste-ventes')->withData($data);
     }
 
