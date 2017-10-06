@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use \Exception;
+use \App\Models\Stock_taille;
 use Illuminate\Support\Facades\Session;
 
 
@@ -107,6 +108,70 @@ class Stock extends Model
         }
         return $nbreArticles;
     }
+
+    public static function checkStocks()
+    {
+        $magasins = \App\Models\Magasin::all();
+
+        foreach ($magasins as $magasin) {
+            $stocks = self::where('id_magasin', $magasin->id_magasin)->get();
+            foreach ($stocks as $stock) {
+                $tailles = Stock_taille::where('id_stock', $stock->id_stock)->get();
+                if ($tailles->isEmpty())
+                    return -1;
+                foreach ($tailles as $taille) {
+                    if ($taille->quantite == $stock->quantite_min)
+                        return 0;
+                    elseif ($taille->quantite > $stock->quantite_min)
+                        return 1;
+                    elseif ($taille->quantite < $stock->quantite_min)
+                        return -1;
+                }
+            }
+        }
+    }
+
+    public static function checkMagasinStock($id_magasin)
+    {
+        $stocks = self::where('id_magasin', $id_magasin)->get();
+        $articles = collect([]);
+        $articlesRAS = collect([]);
+
+        foreach ($stocks as $stock) {
+            $tailles = Stock_taille::where('id_stock', $stock->id_stock)->get();
+            if ($tailles->isEmpty())
+                continue;
+            foreach ($tailles as $taille) {
+                if ($taille->quantite <= $stock->quantite_min)
+                    $articles->put($articles->count(), self::getIdArticle($stock->id_stock));
+
+                elseif ($taille->quantite > $stock->quantite_min)
+                    $articlesRAS->put($articlesRAS->count(), self::getIdArticle($stock->id_stock));
+            }
+        }
+        dump($articles);
+        dump($articlesRAS);
+    }
+
+    public static function getBadArticles($id_magasin)
+    {
+        $stocks = self::where('id_magasin', $id_magasin)->get();
+        $articles = collect([]);
+
+        foreach ($stocks as $stock) {
+            $tailles = Stock_taille::where('id_stock', $stock->id_stock)->get();
+            if ($tailles->isEmpty()){
+                $articles->put($articles->count(), self::getIdArticle($stock->id_stock));
+                continue;
+            }
+            foreach ($tailles as $taille) {
+                if ($taille->quantite <= $stock->quantite_min)
+                    $articles->put($articles->count(), self::getIdArticle($stock->id_stock));
+            }
+        }
+        return $articles;
+    }
+
 
     //Creer le stock d un magasin
     public static function addStock(Request $request)

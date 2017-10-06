@@ -14,7 +14,6 @@ class AuthController extends Controller
 {
     public function login()
     {
-        //return 'a';
         if (!Sentinel::check()) {
             return view('login');
         }

@@ -17,7 +17,18 @@
                     </a>
                 </li>
             @endif
-
+            @foreach(\App\Models\Magasin::all() as $magasin)
+                @if (\App\Models\Stock::getBadArticles($magasin->id_magasin)->count() > 0)
+                    <li>
+                        <a href="{{ Route('admin.stocks',[$magasin->id_magasin]) }}">
+                            <div>
+                                <i class="fa fa-upload fa-fw"></i> Stock du magasin <b>{{ $magasin->libelle }}</b> demande votre attention
+                                <span class="pull-right text-muted small">( {{ count(\App\Models\Stock::getBadArticles($magasin->id_magasin)) }} article(s) )</span>
+                            </div>
+                        </a>
+                    </li>
+                @endif
+            @endforeach
         </ul>
     </li>
     {{-- /.Dropdown Alerts --}}

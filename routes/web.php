@@ -1,15 +1,19 @@
 <?php
 
 
+Route::get('check', function () {
 
+    $magasins = \App\Models\Magasin::all();
 
-/**
- * Authentification
- **/
-Route::get('/login', 'AuthController@login')->name('login');
-Route::post('/login', 'AuthController@submitLogin')->name('submitLogin');
-Route::get('/logout', 'AuthController@logout')->name('logout');
-/*********************************************************************************/
+    foreach ($magasins as $magasin) {
+        $articles = \App\Models\Stock::getBadArticles($magasin->id_magasin);
+        if (\App\Models\Stock::getBadArticles($magasin->id_magasin)->count() > 0)
+            echo "<h2>besoin stock dans magasin $magasin->libelle ( ".$articles->count()." article(s) )</h2>";
+            echo "<hr>";
+    }
+
+});
+
 
 Route::get('/', function () {
     return view('home');
@@ -283,17 +287,10 @@ Route::group(['middleware' => 'vend'], function () {
 });
 
 
-
-
-
 /**
- * Routes Delete
+ * Authentification
  **/
-//Route::get('/magas/delete/{p_table}/{p_id}', 'DeleteController@delete')->name('magas.delete');
-/******************************************************************************/
-
-/**
- * Routes Excel:
- **/
-
+Route::get('/login', 'AuthController@login')->name('login');
+Route::post('/login', 'AuthController@submitLogin')->name('submitLogin');
+Route::get('/logout', 'AuthController@logout')->name('logout');
 /*********************************************************************************/

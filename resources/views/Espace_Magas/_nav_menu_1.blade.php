@@ -6,14 +6,29 @@
             <i class="fa fa-bell fa-fw"></i> <i class="fa fa-caret-down"></i>
         </a>
         <ul class="dropdown-menu dropdown-alerts">
-            <li>
-                <a href="#">
-                    <div>
-                        <span class="pull-right text-muted small">Vous n'avez aucune notification enregistrée</span>
-                    </div>
-                </a>
-            </li>
+            @if (\App\Models\Stock::getBadArticles(1)->count() > 0)
+                <li>
+                    <a href="{{ Route('magas.stocks') }}">
+                        <div>
+                            <i class="fa fa-upload fa-fw"></i> Stock du magasin principal demande votre attention
+                            <span class="pull-right text-muted small">( {{ count(\App\Models\Stock::getBadArticles(1)) }} article(s) )</span>
+                        </div>
+                    </a>
+                </li>
+            @endif
 
+            @foreach(\App\Models\Magasin::where('id_magasin','!=',1)->get() as $magasin)
+                @if (\App\Models\Stock::getBadArticles($magasin->id_magasin)->count() > 0)
+                    <li>
+                        <a href="{{ Route('magas.stocks',[$magasin->id_magasin]) }}">
+                            <div>
+                                <i class="fa fa-upload fa-fw"></i> Stock du magasin <b>{{ $magasin->libelle }}</b> demande votre attention
+                                <span class="pull-right text-muted small">( {{ count(\App\Models\Stock::getBadArticles($magasin->id_magasin)) }} article(s) )</span>
+                            </div>
+                        </a>
+                    </li>
+                @endif
+            @endforeach
         </ul>
     </li>
     {{-- /.Dropdown Alerts --}}
