@@ -24,7 +24,7 @@
                 <a class="toggle-vis" data-column="2">Code</a> -
                 <a class="toggle-vis" data-column="3">Designation</a> -
                 <a class="toggle-vis" data-column="4">Marque</a> -
-                <a class="toggle-vis" data-column="5">Categorie</a> -
+                <a class="toggle-vis" data-column="5">Categorie</a>
             </div>
         @endif
     </div>

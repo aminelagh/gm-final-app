@@ -31,7 +31,7 @@
                 <a class="toggle-vis" data-column="1">Code</a> -
                 <a class="toggle-vis" data-column="2">Designation</a> -
                 <a class="toggle-vis" data-column="3">Marque</a> -
-                <a class="toggle-vis" data-column="4">Categorie</a> -
+                <a class="toggle-vis" data-column="4">Categorie</a>
             </div>
         @endif
     </div>
@@ -78,18 +78,16 @@
                     @foreach( $data as $item )
                         <tr ondblclick="window.open('{{ Route('magas.stock',[ 'p_id' => $item->id_stock ]) }}');">
                             <td>
-                                {{ \App\Models\Article::getRef($item->id_article) }}
-                                {{ \App\Models\Article::getAlias($item->id_article)!=null ? ' - '.\App\Models\Article::getAlias($item->id_article):' ' }}
+                                {{ $item->ref }}
+                                {{ $item->alias!=null ? ' - '.$item->alias:' ' }}
                             </td>
-                            <td>{{ \App\Models\Article::getCode($item->id_article) }}</td>
+                            <td>{{ $item->code }}</td>
                             <td>
-                                @if( App\Models\Article::getImage($item->id_article) != null) <img
-                                        src="{{ asset(App\Models\Article::getImage($item->id_article)) }}"
-                                        width="40px">@endif
-                                {{ \App\Models\Article::getDesignation($item->id_article) }}
+                                @if( $item->image != null) <img src="{{ asset($item->image) }}" width="40px">@endif
+                                {{ $item->designation }}
                             </td>
-                            <td>{{ \App\Models\Article::getMarque($item->id_article) }}</td>
-                            <td>{{ \App\Models\Article::getCategorie($item->id_article) }}</td>
+                            <td>{{ $item->libelle_m }}</td>
+                            <td>{{ $item->libelle_c }}</td>
                             <td align="right">{{ \App\Models\Article::getPrixHT($item->id_article) }}</td>
                             <td align="right">{{ \App\Models\Article::getPrixTTC($item->id_article) }}</td>
                             <td align="right">{{ \App\Models\Article::getPrixHT($item->id_article) }}</td>
@@ -120,8 +118,7 @@
                                     <div class="modal-dialog modal-lg" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close"><span
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                                             aria-hidden="true">&times;</span></button>
                                                 <h3 class="modal-title" id="gridSystemModalLabel">
                                                     <b>{{ \App\Models\Article::getDesignation($item->id_article) }}</b>
@@ -133,32 +130,32 @@
                                                         <table class="table table-striped table-bordered table-hover">
                                                             <tr>
                                                                 <td>Reference</td>
-                                                                <th>{{ \App\Models\Article::getRef($item->id_article) }}
-                                                                    {{ \App\Models\Article::getAlias($item->id_article)!=null ? ' - '.\App\Models\Article::getAlias($item->id_article):' ' }}</th>
+                                                                <th>{{ $item->ref }}
+                                                                    {{ $item->alias!=null ? ' - '.$item->alias:' ' }}</th>
                                                             </tr>
                                                             <tr>
                                                                 <td>Code</td>
-                                                                <th>{{ \App\Models\Article::getCode($item->id_article) }}</th>
+                                                                <th>{{ $item->code }}</th>
                                                             </tr>
                                                             <tr>
                                                                 <td>Marque</td>
-                                                                <th>{{ \App\Models\Article::getMarque($item->id_article) }}</th>
+                                                                <th>{{ $item->libelle_m  }}</th>
                                                             </tr>
                                                             <tr>
                                                                 <td>Categorie</td>
-                                                                <th>{{ \App\Models\Article::getCategorie($item->id_article) }}</th>
+                                                                <th>{{ $item->libelle_c }}</th>
                                                             </tr>
                                                             <tr>
                                                                 <td>Fournisseur</td>
-                                                                <th>{{ \App\Models\Article::getFournisseur($item->id_article) }}</th>
+                                                                <th>{{ $item->libelle_f }}</th>
                                                             </tr>
                                                             <tr>
                                                                 <td>Couleur</td>
-                                                                <th>{{ \App\Models\Article::getCouleur($item->id_article) }}</th>
+                                                                <th>{{ $item->couleur }}</th>
                                                             </tr>
                                                             <tr>
                                                                 <td>Sexe</td>
-                                                                <th>{{ \App\Models\Article::getSexe($item->id_article) }}</th>
+                                                                <th>{{ $item->sexe }}</th>
                                                             </tr>
                                                             <tr>
                                                                 <td colspan="2" align="center">Prix de vente</td>
@@ -226,7 +223,6 @@
                                 {{-- fin Modal (pour afficher les details de chaque article) --}}
                             </td>
                         </tr>
-
 
                     @endforeach
 

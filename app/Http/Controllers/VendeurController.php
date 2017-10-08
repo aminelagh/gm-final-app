@@ -66,12 +66,45 @@ class VendeurController extends Controller
         return view('Espace_Magas.info-article')->withData($data)->withMarques($marques)->withFournisseurs($fournisseurs)->withCategories($categories);
     }
 
-//Lister les ventes
-    // public function ventes()
-    // {
-    //     $data = Vente::where('deleted', false)->where('id_magasin', Session::get('id_magasin'))->get();
-    //     return view('Espace_Vend.liste-promotions')->withData($data);
-    // }
+
+    public function stocks()
+    {
+        $id_magasin = Session::get("id_magasin");
+        $data = collect(DB::select("
+                  SELECT s.*,a.*,m.libelle as libelle_m, c.libelle as libelle_c, f.libelle as libelle_f
+                  FROM stocks s
+                  LEFT JOIN articles a on s.id_article=a.id_article
+                  LEFT JOIN categories c on c.id_categorie=a.id_categorie
+                  LEFT JOIN marques m on m.id_marque=a.id_marque
+                  LEFT JOIN fournisseurs f on f.id_fournisseur=a.id_fournisseur
+                  WHERE id_magasin=" . $id_magasin . ";"));
+        $magasin = Magasin::find($id_magasin);
+
+        if ($data->isEmpty())
+            return redirect()->back()->withAlertWarning("Le stock de votre magasin est vide, veuillez contacter le magasinier.");
+        else
+            return view('Espace_Vend.liste-stocks')->withData($data)->withMagasin($magasin);
+    }
+
+    public function addVente()
+    {
+        $id_magasin = Session::get("id_magasin");
+        $data = collect(DB::select("
+                  SELECT s.*,a.*,m.libelle as libelle_m, c.libelle as libelle_c, f.libelle as libelle_f
+                  FROM stocks s
+                  LEFT JOIN articles a on s.id_article=a.id_article
+                  LEFT JOIN categories c on c.id_categorie=a.id_categorie
+                  LEFT JOIN marques m on m.id_marque=a.id_marque
+                  LEFT JOIN fournisseurs f on f.id_fournisseur=a.id_fournisseur
+                  WHERE id_magasin=" . $id_magasin . ";"));
+
+        if ($data->isEmpty())
+            return redirect()->back()->withAlertWarning("Le stock de votre magasin est vide, veuillez contacter le magasinier.");
+        $magasin = Magasin::find($id_magasin);
+        $modes = Mode_paiement::all();
+        $clients = Client::where('id_magasin', 1)->get();
+        return view('Espace_Vend.add-vente-form')->withData($data)->withMagasin($magasin)->withModesPaiement($modes)->withClients($clients);
+    }
 
 
     public function ventes()
@@ -215,33 +248,6 @@ class VendeurController extends Controller
     {
         $pdf = PDF::loadView('Espace_Vend.pdf-facture');
         return $pdf->download('facture.pdf');
-    }
-
-    public function main_stocks_V()
-    {
-        $data = Stock::where('id_magasin', 1)->get();
-        $magasin = Magasin::find(1);
-        $tailles = Taille_article::all();
-
-        if ($data->isEmpty())
-            return redirect()->back()->withAlertWarning("Le stock du magasin principal est vide, vous devez le créer.")->withRouteWarning('/magas/addStock/' . 1);
-        else
-            return view('Espace_Vend.liste-main_stocks')->withData($data)->withMagasin($magasin)->withTailles($tailles);
-    }
-
-    public function stocks_V()
-    {
-        //if ($p_id == 1)
-        //  return redirect()->back()->withInput()->withAlertInfo("Vous ne pouvez pas accéder à ce magasin de cette manière.");
-        $id_magasin = Session::get('id_magasin');
-        $data = Stock::where('id_magasin', $id_magasin)->get();
-        $magasin = Magasin::find($id_magasin);
-        $tailles = Taille_article::all();
-
-        if ($data->isEmpty())
-            return redirect()->back()->withAlertWarning("Le stock de ce magasin est vide, vous pouvez commencer par le créer.")->withRouteWarning('/magas/addStock/' . $p_id);
-        else
-            return view('Espace_Vend.liste-stocks')->withData($data)->withMagasin($magasin)->withTailles($tailles);
     }
 
 

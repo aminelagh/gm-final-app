@@ -29,7 +29,14 @@ class StockController extends Controller
     public function main_stocks()
     {
         //$data = Stock::where('id_magasin', 1)->get();
-        $data = collect(DB::select("select * from stocks where id_magasin=1"));
+        $data = collect(DB::select("
+                  SELECT s.*,a.*,m.libelle as libelle_m, c.libelle as libelle_c, f.libelle as libelle_f
+                  FROM stocks s
+                  LEFT JOIN articles a on s.id_article=a.id_article
+                  LEFT JOIN categories c on c.id_categorie=a.id_categorie
+                  LEFT JOIN marques m on m.id_marque=a.id_marque
+                  LEFT JOIN fournisseurs f on f.id_fournisseur=a.id_fournisseur
+                  WHERE id_magasin=1"));
         $magasin = Magasin::find(1);
         $tailles = Taille_article::all();
 

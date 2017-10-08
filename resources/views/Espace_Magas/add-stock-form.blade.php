@@ -18,10 +18,10 @@
         @if( !$articles->isEmpty() )
             <div class="breadcrumb">
                 Afficher/Masquer:
-                <a class="toggle-vis" data-column="0">Reference</a> -
+                <a class="toggle-vis" data-column="0">Référence</a> -
                 <a class="toggle-vis" data-column="1">Code</a> -
-                <a class="toggle-vis" data-column="2">Designation</a> -
-                <a class="toggle-vis" data-column="3">Categorie</a> -
+                <a class="toggle-vis" data-column="2">Désignation</a> -
+                <a class="toggle-vis" data-column="3">Catégorie</a> -
                 <a class="toggle-vis" data-column="4">Fournisseur</a> -
                 <a class="toggle-vis" data-column="5">Marque</a> -
                 <a class="toggle-vis" data-column="6">Couleur</a> -
@@ -44,19 +44,14 @@
                     <table id="example" class="table table-striped table-bordered table-hover">
                         <thead>
                         <tr>
-
-                            <th>Reference</th>
+                            <th>Référence</th>
                             <th>Code</th>
-
-                            <th>Designation</th>
-
-                            <th>Categorie</th>
+                            <th>Désignation</th>
+                            <th>Catégorie</th>
                             <th>Fournisseur</th>
                             <th>Marque</th>
-
                             <th>Couleur</th>
                             <th>Sexe</th>
-
                             <th>Prix</th>
                             <th>Quantité min</th>
                             <th>Quantité max</th>
@@ -74,7 +69,7 @@
                                 <th>Marque</th>
                                 <th>Couleur</th>
                                 <th>Sexe</th>
-                                <th>Prix</th>
+                                <th>Prix de vente (TTC)</th>
                                 <th></th>
                                 <th></th>
                                 <th></th>
@@ -104,10 +99,12 @@
                                     <td>{{ $item->couleur }}</td>
                                     <td>{{ $item->sexe }}</td>
 
-                                    <td align="right">{{ $item->prix_v }} DH</td>
-                                    <td><input type="number" min="0" class="form-control" placeholder="Quantite Min" name="quantite_min[{{ $loop->index+1 }}]"
+                                    <td align="right">{{ number_format($item->prix_v*1.2,2) }} DH</td>
+                                    <td><input type="number" min="0" class="form-control" placeholder="Quantite Min"
+                                               name="quantite_min[{{ $loop->index+1 }}]"
                                                value="{{ old('quantite_min.'.($loop->index+1) ) }}"></td>
-                                    <td><input type="number" min="0" class="form-control" placeholder="Quantite Max" name="quantite_max[{{ $loop->index+1 }}]"
+                                    <td><input type="number" min="0" class="form-control" placeholder="Quantite Max"
+                                               name="quantite_max[{{ $loop->index+1 }}]"
                                                value="{{ old('quantite_max.'.($loop->index+1)) }}"></td>
                                     <td align="center">
                                         <a data-toggle="modal" data-target="#modal{{ $loop->iteration }}">
@@ -135,15 +132,15 @@
                                                             </tr>
                                                             <tr>
                                                                 <td>Marque</td>
-                                                                <th>{{ \App\Models\Article::getMarque($item->id_article) }}</th>
+                                                                <th>{{ $item->libelle_m }}</th>
                                                             </tr>
                                                             <tr>
                                                                 <td>Categorie</td>
-                                                                <th>{{ \App\Models\Article::getCategorie($item->id_article) }}</th>
+                                                                <th>{{  $item->libelle_c }}</th>
                                                             </tr>
                                                             <tr>
                                                                 <td>Fournisseur</td>
-                                                                <th>{{ \App\Models\Article::getFournisseur($item->id_article) }}</th>
+                                                                <th>{{  $item->libelle_f }}</th>
                                                             </tr>
                                                             <tr>
                                                                 <td>Couleur</td>
@@ -157,42 +154,25 @@
                                                                 <td colspan="2" align="center">Prix d'achat</td>
                                                             </tr>
                                                             <tr>
-                                                                <th align="right">{{ \App\Models\Article::getPrixAchatHT($item->id_article) }}
-                                                                    Dhs HT
-                                                                </th>
-                                                                <th>{{ \App\Models\Article::getPrixAchatTTC($item->id_article) }}
-                                                                    Dhs TTC
-                                                                </th>
+                                                                <th align="right">{{ number_format($item->prix_a,2) }} Dhs HT</th>
+                                                                <th>{{ number_format($item->prix_a*1.2,2) }} Dhs TTC</th>
                                                             </tr>
                                                             <tr>
                                                                 <td colspan="2" align="center">Prix de vente</td>
                                                             </tr>
                                                             <tr>
-                                                                <th align="right">{{ \App\Models\Article::getPrixHT($item->id_article) }}
-                                                                    Dhs HT
-                                                                </th>
-                                                                <th>{{ \App\Models\Article::getPrixTTC($item->id_article) }}
-                                                                    Dhs TTC
-                                                                </th>
+                                                                <th align="right">{{ number_format($item->prix_v,2) }} Dhs HT</th>
+                                                                <th>{{ number_format($item->prix_v*1.2,2) }} Dhs TTC</th>
                                                             </tr>
                                                         </table>
-                                                        @if( $item->image != null) <img
-                                                                src="{{ asset($item->image) }}"
-                                                                width="150px">@endif
+                                                        @if( $item->image != null) <img src="{{ asset($item->image) }}" width="150px">@endif
                                                     </div>
                                                     <div class="modal-footer">
                                                         <div class="col-lg-4">
-                                                            <a href="{{ route('magas.article',[$item->id_article]) }}"
-                                                               class="btn btn-info btn-outline">
-                                                                Modifier
-                                                            </a>
+                                                            <a href="{{ route('magas.article',[$item->id_article]) }}" class="btn btn-info btn-outline">Modifier</a>
                                                         </div>
                                                         <div class="col-lg-4">
-                                                            <button type="button" class="btn btn-info btn-outline"
-                                                                    data-dismiss="modal">
-                                                                Fermer
-                                                            </button>
-
+                                                            <button type="button" class="btn btn-info btn-outline" data-dismiss="modal">Fermer</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -231,7 +211,7 @@
                 // Setup - add a text input to each footer cell
                 $('#example tfoot th').each(function () {
                     var title = $(this).text();
-                    if (title == "Reference" || title == "Code") {
+                    if (title == "Référence" || title == "Code") {
                         $(this).html('<input type="text" size="6" class="form-control" placeholder="' + title + '" title="Rechercher par ' + title + '" onfocus="this.placeholder= \'\';" />');
                     }
                     else if (title == "Categorie" || title == "Fournisseur" || title == "Marque") {
@@ -258,9 +238,9 @@
                     //"info": true,
                     stateSave: false,
                     "columnDefs": [
-                        {"width": "04%", "targets": 0, "type": "num", "visible": true, "searchable": true},//#
-                        {"width": "05%", "targets": 1, "type": "string", "visible": true},
-                        {"width": "05%", "targets": 2, "type": "string", "visible": true},
+                        {"width": "02%", "targets": 0, "type": "num", "visible": true },
+                        {"width": "02%", "targets": 1, "type": "string", "visible": true},
+                        //{"width": "05%", "targets": 2, "type": "string", "visible": true},
 
                         {"width": "08%", "targets": 3, "type": "string", "visible": false},
                         {"width": "08%", "targets": 4, "type": "string", "visible": false},
@@ -336,6 +316,31 @@
             });
         </script>
     @endif
+@endsection
+
+@section('styles')
+    <style>
+        #circle {
+            width: 15px;
+            height: 15px;
+            -webkit-border-radius: 25px;
+            -moz-border-radius: 25px;
+            border-radius: 25px;
+        }
+
+        #example {
+            width: 100%;
+            border: 0px solid #D9D5BE;
+            border-collapse: collapse;
+            margin: 0px;
+            background: white;
+            font-size: 1em;
+        }
+
+        #example td {
+            padding: 5px;
+        }
+    </style>
 @endsection
 
 @section('menu_1')@include('Espace_Magas._nav_menu_1')@endsection

@@ -4,8 +4,7 @@
 
 @section('main_content')
 
-    <h3 class="page-header">Stock du magasin:
-        <strong>{{ $magasin->libelle }}</strong></h3>
+    <h3 class="page-header">Stock du magasin: <strong>{{ $magasin->libelle }}</strong></h3>
 
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ route('magas.home') }}">Dashboard</a></li>
@@ -19,23 +18,22 @@
         <a type="button" class="btn btn-outline btn-primary"
            href="{{ Route('magas.addStockTransfertOUT',[ 'id_magasin_source' => $magasin->id_magasin]) }}"
                 {!! setPopOver("","Transferer des articles depuis le stock du magasin principal vers le stock de ce magasin (".$magasin->libelle.").") !!}>
-            <i class="glyphicon glyphicon-arrow-down"></i>Transferer vers ce magasin
-        </a>
+            <i class="glyphicon glyphicon-arrow-down"></i> Transferer vers ce magasin</a>
         <a type="button" class="btn btn-outline btn-primary"
-           href="{{ Route('magas.addStockTransfertIN',[ 'id_magasin_destination' => $magasin->id_magasin ]) }}" {!! setPopOver("","Transferer des articles depuis le stock ce magasin (".$magasin->libelle.") vers le stock du magasin principal.") !!}>
-            Transferer depuis ce magasin <i class="glyphicon glyphicon-arrow-up"></i>
-        </a>
+           href="{{ Route('magas.addStockTransfertIN',[ 'id_magasin_destination' => $magasin->id_magasin ]) }}"
+                {!! setPopOver("","Transferer des articles depuis le stock ce magasin (".$magasin->libelle.") vers le stock du magasin principal.") !!}>
+            Transferer depuis ce magasin <i class="glyphicon glyphicon-arrow-up"></i></a>
     </div>
 
     <div class="row">
         @if( !$data->isEmpty() )
             <div class="breadcrumb">
                 Afficher/Masquer:
-                <a class="toggle-vis" data-column="0">Reference</a> -
+                <a class="toggle-vis" data-column="0">Référence</a> -
                 <a class="toggle-vis" data-column="1">Code</a> -
-                <a class="toggle-vis" data-column="2">Designation</a> -
+                <a class="toggle-vis" data-column="2">Désignation</a> -
                 <a class="toggle-vis" data-column="3">Marque</a> -
-                <a class="toggle-vis" data-column="4">Categorie</a>
+                <a class="toggle-vis" data-column="4">Catégorie</a>
             </div>
         @endif
     </div>
@@ -46,13 +44,13 @@
                 <table id="myTable" class="table table-striped table-bordered table-hover">
                     <thead>
                     <tr>
-                        <th rowspan="2">Reference</th>
+                        <th rowspan="2">Référence</th>
                         <th rowspan="2">Code</th>
                         <th rowspan="2">Désignation</th>
                         <th rowspan="2">Marque</th>
-                        <th rowspan="2">Categorie</th>
+                        <th rowspan="2">Catégorie</th>
                         <th colspan="2">Prix de gros</th>
-                        <th colspan="2">Prix</th>
+                        <th colspan="2">Prix de vente</th>
                         <th rowspan="2">Etat</th>
                         <th rowspan="2">Details</th>
 
@@ -66,12 +64,11 @@
                     </thead>
                     <tfoot>
                     <tr>
-
-                        <th>Reference</th>
+                        <th>Référence</th>
                         <th>Code</th>
                         <th>Désignation</th>
                         <th>Marque</th>
-                        <th>Categorie</th>
+                        <th>Catégorie</th>
                         <th>HT</th>
                         <th>TTC</th>
                         <th>HT</th>
@@ -115,9 +112,8 @@
                                 @endif
                             </td>
                             <td align="center">
-                                <a data-toggle="modal" data-target="#modal{{ $loop->iteration }}"><i
-                                            class="glyphicon glyphicon-info-sign"
-                                            aria-hidden="false"></i></a>
+                                <a data-toggle="modal" data-target="#modal{{ $loop->iteration }}">
+                                    <i class="glyphicon glyphicon-info-sign" aria-hidden="false"></i></a>
 
                                 {{-- Modal (pour afficher les details de chaque article) --}}
                                 <div class="modal fade" id="modal{{ $loop->iteration }}" role="dialog"
@@ -189,8 +185,7 @@
                                                             </tr>
                                                         </table>
                                                         @if( $item->image != null)
-                                                            <img src="{{ asset($item->image) }}"
-                                                                 width="150px">
+                                                            <img src="{{ asset($item->image) }}" width="150px">
                                                         @endif
                                                     </div>
                                                     @if(\App\Models\Stock_taille::hasTailles($item->id_stock))
@@ -220,10 +215,7 @@
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-default"
-                                                        data-dismiss="modal">
-                                                    Close
-                                                </button>
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                             </div>
                                         </div>
                                     </div>
@@ -261,8 +253,8 @@
                         {"width": "05%", "targets": 1, "type": "string", "visible": true},  //code
 
                         //{"width": "08%", "targets": 2, "type": "string", "visible": true},    //desi
-                        {"width": "08%", "targets": 3, "type": "string", "visible": false},     //Marque
-                        {"width": "08%", "targets": 4, "type": "string", "visible": false},     //caegorie
+                        {"width": "08%", "targets": 3, "type": "string", "visible": true},     //Marque
+                        {"width": "08%", "targets": 4, "type": "string", "visible": true},     //caegorie
 
                         {"width": "02%", "targets": 5, "type": "string", "visible": true},      //HT
                         {"width": "02%", "targets": 6, "type": "num-fmt", "visible": true},     //TTC
@@ -272,17 +264,14 @@
                         {"width": "05%", "targets": 9, "type": "num-fmt", "visible": true},     //etat
 
                         {"width": "04%", "targets": 10, "type": "num-fmt", "visible": true, "searchable": false}
-                    ],
-                    "select": {
-                        items: 'column'
-                    }
+                    ]
                 });
 
-              //  table.on('order.dt search.dt', function () {
-                  //  table.column(0, {search: 'applied', order: 'applied'}).nodes().each(function (cell, i) {
-                      //  cell.innerHTML = i + 1;
-                  //  });
-              //  }).draw();
+                //  table.on('order.dt search.dt', function () {
+                //  table.column(0, {search: 'applied', order: 'applied'}).nodes().each(function (cell, i) {
+                //  cell.innerHTML = i + 1;
+                //  });
+                //  }).draw();
 
                 // Setup - add a text input to each footer cell
                 $('#myTable tfoot th').each(function () {
@@ -353,7 +342,5 @@
         #myTable td {
             padding: 5px;
         }
-
-
     </style>
 @endsection

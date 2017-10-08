@@ -266,14 +266,15 @@ Route::group(['middleware' => 'vend'], function () {
     Route::get('/vend/profile', 'VendeurController@profile')->name('vend.profile');
 
     //afficher le stock du magasin principal
-    Route::get('/vend/stocks', 'VendeurController@stocks_V')->name('vend.main_stocks');
-    Route::get('/vend/stocks/{p_id?}', 'StockController@stocks_V')->name('vend.stocks');
+    Route::get('/vend/stocks', 'VendeurController@stocks')->name('vend.stocks');
+    Route::get('/vend/stock/{p_id}', 'VendeurController@stock')->name('vend.stock');
 
     //afficher un article du stock en detail
     Route::get('/vend/stock/{p_id}', 'StockController@stock')->name('vend.stock');
     //Vente
     Route::get('/vend/ventes', 'VendeurController@ventes')->name('vend.ventes');
     Route::get('/vend/vente/{p_id}', 'VendeurController@vente')->name('vend.vente');
+    Route::get('/vend/addVente', 'VendeurController@addVente')->name('vend.addVente');
     Route::get('/vend/addVenteSimple', 'VendeurController@addVenteSimpleV')->name('vend.addVenteSimple');
     Route::get('/vend/addVenteGros', 'VendeurController@addVenteGrosV')->name('vend.addVenteGros');
     Route::post('/vend/submitAddVente', 'VendeurController@submitAddVente')->name('vend.submitAddVente');

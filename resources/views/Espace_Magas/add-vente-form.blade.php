@@ -8,18 +8,18 @@
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ route('magas.home') }}">Dashboard</a></li>
         <li class="breadcrumb-item">Gestion des ventes</li>
-        <li class="breadcrumb-item active">Nouvelle vente simple</li>
+        <li class="breadcrumb-item active">Nouvelle vente</li>
     </ol>
 
     <div class="row">
         @if( !$data->isEmpty() )
             <div class="breadcrumb">
                 Afficher/Masquer:
-                <a class="toggle-vis" data-column="1">Reference</a> -
-                <a class="toggle-vis" data-column="2">Code</a> -
-                <a class="toggle-vis" data-column="3">Designation</a> -
-                <a class="toggle-vis" data-column="4">Marque</a> -
-                <a class="toggle-vis" data-column="5">Categorie</a>
+                <a class="toggle-vis" data-column="0">Reference</a> -
+                <a class="toggle-vis" data-column="1">Code</a> -
+                <a class="toggle-vis" data-column="2">Designation</a> -
+                <a class="toggle-vis" data-column="3">Marque</a> -
+                <a class="toggle-vis" data-column="4">Categorie</a>
             </div>
         @endif
     </div>
@@ -218,13 +218,9 @@
                                                                     <td>Categorie</td>
                                                                     <th colspan="2">{{ $item->libelle_c }}</th>
                                                                 </tr>
-
-                                                                <td>Fournisseur</td>
-                                                                <th colspan="2">{{ $item->libelle_f }}</th>
-                                                                </tr>
                                                                 <tr>
-                                                                    <td>Code</td>
-                                                                    <th colspan="2">{{ $item->code }}</th>
+                                                                    <td>Fournisseur</td>
+                                                                    <th colspan="2">{{ $item->libelle_f }}</th>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>Couleur</td>

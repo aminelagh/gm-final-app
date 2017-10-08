@@ -4,7 +4,7 @@
 
 @section('main_content')
 
-    <h1 class="page-header">Ajouter un magasin</h1>
+    <h3 class="page-header">Ajouter un magasin</h3>
 
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ route('magas.home') }}">Dashboard</a></li>

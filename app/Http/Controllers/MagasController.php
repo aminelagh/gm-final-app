@@ -120,10 +120,15 @@ class MagasController extends Controller
 
     public function articles()
     {
-        $data = Article::where('deleted', false)->get();
-        $marques = Marque::all();
-        $fournisseurs = Fournisseur::all();
-        $categories = Categorie::all();
+        //$data = Article::where('deleted', false)->get();
+        $data = collect(DB::select("
+            SELECT a.*, c.libelle as libelle_c, m.libelle as libelle_m, f.libelle as libelle_f,
+                  m.libelle as libelle_m
+            FROM articles a
+            LEFT JOIN categories c on a.id_categorie=c.id_categorie
+            LEFT JOIN fournisseurs f on a.id_fournisseur=f.id_fournisseur
+            LEFT JOIN marques m on a.id_marque=m.id_marque
+            WHERE a.deleted=false ;"));
 
         return view('Espace_Magas.liste-articles')->withData($data);
     }
@@ -239,11 +244,8 @@ class MagasController extends Controller
     public function main_magasin()
     {
         $data = Magasin::find(1);
-        //$stock = Stock::where('id_magasin', 1)->get();
-
         return view('Espace_Magas.info-main_magasin')->withData($data);//->withStock($stock);
     }
-
 
     //Ventes
     public function addVente()

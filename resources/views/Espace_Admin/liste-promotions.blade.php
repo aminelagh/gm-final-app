@@ -20,7 +20,7 @@
                         <th>Magasin</th>
                         <th>Article</th>
                         <th>Taux</th>
-                        <th>Periode</th>
+                        <th>Période</th>
                         <th>Etat</th>
                         <th>Details</th>
                     </tr>
@@ -31,7 +31,7 @@
                             <th>Magasin</th>
                             <th>Article</th>
                             <th>Taux</th>
-                            <th>Periode</th>
+                            <th>Période</th>
                             <th></th>
                             <th></th>
                         </tr>
@@ -57,7 +57,7 @@
                                 </td>
                                 <td align="right">{{ $item->taux }} %</td>
                                 <td align="middle">du <b>{{ getShortDateHelper($item->date_debut) }}</b> au
-                                    <b>{{ getDateHelper($item->date_fin) }}</b></td>
+                                    <b>{{ getShortDateHelper($item->date_fin) }}</b></td>
                                 <td align="middle">
                                     @if($item->active == false)
                                         <div id="circle"
@@ -246,7 +246,7 @@
                     else if (title == "Taux") {
                         $(this).html('<input type="text" size="1" class="form-control input-sm" placeholder="' + title + '" title="Rechercher par ' + title + '" onfocus="this.placeholder= \'\';" />');
                     }
-                    else if (title == "Periode") {
+                    else if (title == "Période") {
                         $(this).html('<input type="text" size="20" class="form-control input-sm" placeholder="' + title + '" title="Rechercher par ' + title + '" onfocus="this.placeholder= \'\';" />');
                     }
                     else if (title != "") {

@@ -3,23 +3,23 @@
 @section('title') Nouvelle vente  @endsection
 
 @section('main_content')
-    <h3 class="page-header">Nouvelle vente simple</h3>
+    <h3 class="page-header">Nouvelle vente</h3>
 
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{{ route('magas.home') }}">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('vend.home') }}">Dashboard</a></li>
         <li class="breadcrumb-item">Gestion des ventes</li>
-        <li class="breadcrumb-item active">Nouvelle vente simple</li>
+        <li class="breadcrumb-item active">Nouvelle vente</li>
     </ol>
 
     <div class="row">
         @if( !$data->isEmpty() )
             <div class="breadcrumb">
                 Afficher/Masquer:
-                <a class="toggle-vis" data-column="1">Reference</a> -
-                <a class="toggle-vis" data-column="2">Code</a> -
-                <a class="toggle-vis" data-column="3">Designation</a> -
-                <a class="toggle-vis" data-column="4">Marque</a> -
-                <a class="toggle-vis" data-column="5">Categorie</a>
+                <a class="toggle-vis" data-column="0">Référence</a> -
+                <a class="toggle-vis" data-column="1">Code</a> -
+                <a class="toggle-vis" data-column="2">Désignation</a> -
+                <a class="toggle-vis" data-column="3">Marque</a> -
+                <a class="toggle-vis" data-column="4">Catégorie</a>
             </div>
         @endif
     </div>
@@ -44,12 +44,28 @@
             //alert("total = "+total);
             document.getElementById("sommeQ_" + groupe).value = total;
             document.getElementById("total_" + groupe).value = total * parseFloat(prix);
+
+            calcTotal2();
+        }
+
+        function calcTotal2() {
+            var total = 0;
+
+            for (j = 1; j < 20; j++) {
+                var totali = document.getElementById("total_" + j).value;
+                if (document.getElementById("total_" + j).value == "") {
+                    totali = 0;
+                }
+                total = total + parseFloat(totali);
+                document.getElementById("total_prix").value = total;
+            }
+            alert("total= ");
         }
 
         function calcTotal(counter) {
             var total = 0;
-            for (i = 1; i < counter; i++) {
-                var totali = document.getElementById("total_" + i).value;
+            for (j = 1; j < 100; j++) {
+                var totali = document.getElementById("total_" + j).value;
 
                 if (totali == "") {
                     totali = 0;
@@ -57,10 +73,9 @@
                     alert("Erreur, totali<0");
                     break;
                 }
-
-
-                total += parseFloat(totali);
-
+                total = total + parseFloat(totali);
+                document.getElementById("total_prix").value = total;
+                alert("total= " + total);
             }
             document.getElementById("total_prix").value = total;
         }
@@ -79,7 +94,7 @@
             <div class="col-lg-12">
                 {{-- *************** form ***************** --}}
                 <form role="form" name="myForm" id="myForm" method="post"
-                      action="{{ Route('magas.submitAddVente') }}">
+                      action="{{ Route('vend.submitAddVente') }}">
                     {{ csrf_field() }}
                     <input type="hidden" name="id_magasin" value="{{ $magasin->id_magasin }}"/>
                     <input type="hidden" name="type_vente" value="simple"/>
@@ -87,7 +102,6 @@
                     <table id="myTable" class="table table-striped table-bordered table-hover">
                         <thead>
                         <tr>
-                            <th rowspan="2"> #</th>
                             <th rowspan="2">Reference</th>
                             <th rowspan="2">Code</th>
                             <th rowspan="2">Designation</th>
@@ -96,7 +110,7 @@
                             <th colspan="2">Prix de gros</th>
                             <th colspan="2">Prix</th>
                             <th rowspan="2">Etat</th>
-                            <th rowspan="2">Actions</th>
+                            <th rowspan="2"></th>
 
                         </tr>
                         <tr>
@@ -108,7 +122,6 @@
                         </thead>
                         <tfoot>
                         <tr>
-                            <th></th>
                             <th>Reference</th>
                             <th>Code</th>
                             <th>Designation</th>
@@ -124,26 +137,23 @@
                         </tfoot>
                         <tbody>
                         @foreach( $data as $item )
-
-                            <tr {{--ondblclick="window.open('{{ Route('magas.stock',[ 'p_id' => $item->id_stock ]) }}');" --}}>
-
-                                <td>{{ $loop->index+1 }}</td>
+                            <tr>
+                                <input type="hidden" name="id_stock[{{ $loop->iteration }}]"
+                                       value="{{ $item->id_stock }}"/>
                                 <td>
-                                    {{ \App\Models\Article::getRef($item->id_article) }}
-                                    {{ \App\Models\Article::getAlias($item->id_article)!=null ? ' - '.\App\Models\Article::getAlias($item->id_article):' ' }}
+                                    {{ $item->ref }}
+                                    {{ $item->alias!=null ? ' - '.$item->alias:' ' }}
                                 </td>
-                                <td>{{ \App\Models\Article::getCode($item->id_article) }}</td>
+                                <td>{{ $item->code }}</td>
                                 <td>
-                                    @if( App\Models\Article::getImage($item->id_article) != null)
-                                        <img src="{{ asset(App\Models\Article::getImage($item->id_article)) }}"
-                                             width="40px"
-                                             onmouseover="overImage('{{ asset(App\Models\Article::getImage($item->id_article)) }}');"
-                                             onmouseout="outImage();">
+                                    @if( $item->image != null)
+                                        <img src="{{ asset($item->image) }}" width="40px"
+                                             onmouseover="overImage('{{ asset($item->image) }}');" onmouseout="outImage();">
                                     @endif
-                                    {{ \App\Models\Article::getDesignation($item->id_article) }}
+                                    {{ $item->designation }}
                                 </td>
-                                <td>{{ \App\Models\Article::getMarque($item->id_article) }}</td>
-                                <td>{{ \App\Models\Article::getCategorie($item->id_article) }}</td>
+                                <td>{{ $item->libelle_m }}</td>
+                                <td>{{ $item->libelle_c }}</td>
                                 <td align="right">{{ \App\Models\Article::getPrixHT($item->id_article) }}</td>
                                 <td align="right">
                                     <div id="prix_{{ $loop->iteration }}"
@@ -191,42 +201,35 @@
                                                             <table class="table table-striped table-bordered table-hover">
                                                                 <tr>
                                                                     <td>Code</td>
-                                                                    <th colspan="2">{{ \App\Models\Article::getCode($item->id_article) }}</th>
+                                                                    <th colspan="2">{{ $item->code }}</th>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>Reference</td>
                                                                     <th colspan="2">
-                                                                        {{ \App\Models\Article::getRef($item->id_article) }}
-                                                                        {{ \App\Models\Article::getAlias($item->id_article)!=null ? ' - '.\App\Models\Article::getAlias($item->id_article):' ' }}
+                                                                        {{ $item->ref }}
+                                                                        {{ $item->alias!=null ? ' - '.$item->alias:' ' }}
                                                                     </th>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>Marque</td>
-                                                                    <th colspan="2">{{ \App\Models\Article::getMarque($item->id_article) }}</th>
+                                                                    <th colspan="2">{{ $item->libelle_m }}</th>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>Categorie</td>
-                                                                    <th colspan="2">{{ \App\Models\Article::getCategorie($item->id_article) }}</th>
+                                                                    <th colspan="2">{{ $item->libelle_c }}</th>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Fournisseur</td>
+                                                                    <th colspan="2">{{ $item->libelle_f }}</th>
                                                                 </tr>
 
-                                                                <td>Fournisseur</td>
-                                                                <th colspan="2">{{ \App\Models\Article::getFournisseur($item->id_article) }}</th>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Code</td>
-                                                                    <th colspan="2">{{ \App\Models\Article::getCode($item->id_article) }}</th>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Code</td>
-                                                                    <th colspan="2">{{ \App\Models\Article::getCode($item->id_article) }}</th>
-                                                                </tr>
                                                                 <tr>
                                                                     <td>Couleur</td>
-                                                                    <th colspan="2">{{ \App\Models\Article::getCouleur($item->id_article) }}</th>
+                                                                    <th colspan="2">{{ $item->couleur }}</th>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>Sexe</td>
-                                                                    <th colspan="2">{{ \App\Models\Article::getSexe($item->id_article) }}</th>
+                                                                    <th colspan="2">{{ $item->sexe }}</th>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>Prix de vente</td>
@@ -237,10 +240,6 @@
                                                                         {{ \App\Models\Article::getPrixTTC($item->id_article) }}
                                                                         Dhs TTC
                                                                     </th>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Code</td>
-                                                                    <th colspan="2">{{ \App\Models\Article::getCode($item->id_article) }}</th>
                                                                 </tr>
                                                             </table>
                                                         </div>
@@ -261,42 +260,42 @@
                                                                             <input type="hidden"
                                                                                    name="quantite[{{ $item->id_stock }}][{{ $loop->iteration }}]"
                                                                                    value="{{ $taille->quantite }}"/>
+                                                                            <input type="hidden"
+                                                                                   name="id_taille_article[{{ $item->id_stock }}][{{ $loop->index+1 }}]"
+                                                                                   value="{{ $taille->id_taille_article }}"/>
 
                                                                             <td align="center">{{ \App\Models\Taille_article::getTaille($taille->id_taille_article) }}</td>
                                                                             <td align="center">{{ $taille->quantite }}</td>
                                                                             <td>
-                                                                                <input type="number" min="0"
-                                                                                       class="form-control"
-                                                                                       max="{{ $taille->quantite }}"
-                                                                                       placeholder="Quantite"
+                                                                                <input type="number" min="0" class="form-control"
+                                                                                       max="{{ $taille->quantite }}" placeholder="Quantite"
                                                                                        name="quantiteOUT[{{ $item->id_stock }}][{{ $loop->iteration }}]"
                                                                                        value="{{ old('quantiteOUT.'.($item->id_stock).'.'.($loop->iteration).'') }}"
                                                                                        id="quantite_{{ $loop->parent->iteration }}_{{ $loop->iteration }}"
-                                                                                       onkeyup="calcQ({{ $loop->parent->iteration }},{{ \App\Models\Stock_taille::getTailles($item->id_stock)->count() }});calcTotal({{ $data->count() }});">
+                                                                                       onkeyup="calcQ( 0{{ $loop->parent->iteration }} , 0{{ \App\Models\Stock_taille::getTailles($item->id_stock)->count() }} );">
 
                                                                             </td>
                                                                         </tr>
                                                                     @endforeach
                                                                     <tr>
-                                                                        <th colspan="2">Qts</th>
-                                                                        <td><input type="number" disabled
-                                                                                   class="form-control"
-                                                                                   id="sommeQ_{{ $loop->iteration }}"
-                                                                                   value="0"></td>
+                                                                        <th colspan="2">Quantité</th>
+                                                                        <td><input type="number" readonly class="form-control"
+                                                                                   id="sommeQ_{{ $loop->iteration }}" value="0"></td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <th colspan="2">Total</th>
-                                                                        <td><input type="number" name="result"
-                                                                                   pattern=".##"
-                                                                                   disabled
-                                                                                   id="total_{{ $loop->iteration }}"
-                                                                                   class="form-control"/></td>
+                                                                        <th colspan="2">Prix * Quantité</th>
+                                                                        <td><input type="number" name="result" pattern=".##" readonly
+                                                                                   id="total_{{ $loop->iteration }}" class="form-control"/></td>
                                                                     </tr>
 
                                                                 </table>
                                                             @else
                                                                 <h2 class="row">
                                                                     <b><i>Aucun article disponible</i></b>
+
+                                                                    <input type="hidden" name="result" pattern=".##" readonly value="0"
+                                                                           id="total_{{ $loop->iteration }}" class="form-control"/>
+
                                                                 </h2>
                                                             @endif
                                                         </div>
@@ -367,9 +366,9 @@
                                                     </th>
 
                                                     <td>
-                                                    <textarea class="form-control" placeholder="Raison"
-                                                              name="raison" cols="10"
-                                                              rows="2">{{ old('raison') }}</textarea>
+                                                    <textarea class="form-control" placeholder="Raison" name="raison" cols="10" rows="2">
+                                                        {{ old('raison') }}
+                                                    </textarea>
                                                     </td>
 
                                                 </tr>
@@ -378,9 +377,7 @@
                                                         <label>Montant sans remise</label>
                                                     </th>
                                                     <td>
-                                                        <input type="number" name="result" pattern=".##"
-                                                               disabled onchange=""
-                                                               id="total_prix"
+                                                        <input type="number" name="result" pattern=".##" disabled onchange="" id="total_prix"
                                                                class="form-control"/>
                                                     </td>
                                                 </tr>
@@ -407,7 +404,7 @@
                                                     <td>
                                                         <select class="form-control" name="id_mode_paiement">
                                                             @foreach( $modes_paiement as $mode )
-                                                                <option value="{{$mode->id_mode_paiement }}" {{$mode->id_mode=="2" ? 'selected' : '' }}>{{$mode->libelle }}</option>
+                                                                <option value="{{ $mode->id_mode_paiement }}" {{$mode->id_mode=="2" ? 'selected' : '' }}>{{$mode->libelle }}</option>
                                                             @endforeach
                                                         </select>
                                                     </td>
@@ -419,9 +416,19 @@
                                                             chequier</label>
                                                     </th>
                                                     <td>
-                                                        <input class="form-control" type="text" placeholder="ref"
-                                                               name="ref"
-                                                               value="{{ old('ref') }}">
+                                                        <input class="form-control" type="text" placeholder="ref" name="ref" value="{{ old('ref') }}">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>
+                                                        <label>Client</label>
+                                                    </th>
+                                                    <td>
+                                                        <select class="form-control" name="id_client">
+                                                            @foreach( $clients as $client )
+                                                                <option value="{{ $client->id_client }}">{{ $client->nom." ".$client->prenom }}</option>
+                                                            @endforeach
+                                                        </select>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -431,16 +438,13 @@
                                 <div class="modal-footer">
                                     <div class="btn-group btn-group-justified" role="group" aria-label="group button">
                                         <div class="btn-group" role="group">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal"
-                                                    role="button">Fermer
-                                            </button>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal" role="button">Fermer</button>
                                         </div>
                                         <div class="btn-group" role="group">
                                             <!--button type="button" id="saveImage" class="btn btn-default btn-hover-green"
                                                     data-action="save" role="button">Save
                                             </button-->
-                                            <input type="submit" value="Valider la vente" formtarget="_blank"
-                                                   class="btn btn-outline btn-success">
+                                            <input type="submit" value="Valider la vente" class="btn btn-outline btn-success">
                                         </div>
                                     </div>
                                 </div>
@@ -495,12 +499,12 @@
                     "info": false,
                     stateSave: false,
                     "columnDefs": [
-                        {"visible": true, "targets": -1},
+                        //{"visible": true, "targets": -1},
                         {"width": "04%", "targets": 0, "type": "num", "visible": true, "searchable": false}, //#
                         {"width": "05%", "targets": 1, "type": "string", "visible": true},  //ref
-                        {"width": "05%", "targets": 2, "type": "string", "visible": true},  //code
+                        //{"width": "05%", "targets": 2, "type": "string", "visible": true},  //code
 
-                        //{"width": "08%", "targets": 3, "type": "string", "visible": true},    //desi
+                        {"width": "05%", "targets": 3, "type": "string", "visible": true},    //desi
                         {"width": "08%", "targets": 4, "type": "string", "visible": false},     //Marque
                         {"width": "08%", "targets": 5, "type": "string", "visible": false},     //caegorie
 
@@ -509,9 +513,9 @@
                         {"width": "02%", "targets": 8, "type": "string", "visible": true},      //HT
                         {"width": "02%", "targets": 9, "type": "num-fmt", "visible": true},     //TTC
 
-                        {"width": "05%", "targets": 10, "type": "num-fmt", "visible": true},     //etat
+                        //{"width": "05%", "targets": 10, "type": "num-fmt", "visible": true},     //etat
 
-                        {"width": "04%", "targets": 11, "type": "num-fmt", "visible": true, "searchable": false}
+                        {"width": "04%", "targets": 10, "type": "num-fmt", "visible": true, "searchable": false}
                     ],
                     "select": {
                         items: 'column'
@@ -537,8 +541,8 @@
     @endif
 @endsection
 
-@section('menu_1')@include('Espace_Magas._nav_menu_1')@endsection
-@section('menu_2')@include('Espace_Magas._nav_menu_2')@endsection
+@section('menu_1')@include('Espace_Vend._nav_menu_1')@endsection
+@section('menu_2')@include('Espace_Vend._nav_menu_2')@endsection
 
 @section('styles')
     <style>

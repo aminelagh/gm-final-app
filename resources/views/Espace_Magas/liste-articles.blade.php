@@ -4,12 +4,12 @@
 
 @section('main_content')
 
-    <h1 class="page-header">Liste des Articles</h1>
+    <h3 class="page-header">Liste des Articles</h3>
 
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ route('magas.home') }}">Dashboard</a></li>
         <li class="breadcrumb-item ">Gestion des Articles</li>
-        <li class="breadcrumb-item active">Liste des articles</li>
+        <li class="breadcrumb-item active"><a href="{{ route('magas.articles') }}">Liste des articles</a></li>
     </ol>
 
     <!-- Table -->
@@ -34,7 +34,6 @@
             <table id="myTable" class="table table-striped table-bordered table-hover">
                 <thead>
                 <tr>
-
                     <th>Reference</th>
                     <th>Code</th>
                     <th>Designation</th>
@@ -43,15 +42,14 @@
                     <th>Marque</th>
                     <th>Couleur</th>
                     <th>Sexe</th>
-                    <th title="Prix d'achat HT">Prix achat</th>
-                    <th title="Prix de vente TTC">Prix vente</th>
+                    <th title="Prix d'achat HT">Prix achat (HT)</th>
+                    <th title="Prix de vente TTC">Prix vente (TTC)</th>
                     <th>Details</th>
                 </tr>
                 </thead>
                 @if( !$data->isEmpty() )
                     <tfoot>
                     <tr>
-
                         <th>Reference</th>
                         <th>Code</th>
                         <th>Designation</th>
@@ -61,7 +59,7 @@
                         <th>Couleur</th>
                         <th>Sexe</th>
                         <th>Prix</th>
-                        <th></th>
+                        <th>Prix</th>
                         <th></th>
                     </tr>
                     </tfoot>
@@ -69,7 +67,7 @@
                 <tbody>
                 @if( $data->isEmpty() )
                     <tr>
-                        <td align="center" colspan="12">Aucun Article</td>
+                        <td align="center" colspan="11">Aucun Article</td>
                     </tr>
                 @else
                     @foreach( $data as $item )
@@ -80,22 +78,24 @@
                                 ondblclick="window.open('{{ Route('magas.article',['p_id'=>$item->id_article]) }}');" {!! setPopOver("","Article non validé par l'administrateur") !!}>
                                 @endif
 
-
-                                <td align="right">{{ $item->ref }} - {{ $item->alias }}</td>
+                                <td align="right">
+                                    {{ \App\Models\Article::getRef($item->id_article) }}
+                                    {{ \App\Models\Article::getAlias($item->id_article)!=null ? ' - '.\App\Models\Article::getAlias($item->id_article):' ' }}
+                                </td>
                                 <td align="right">{{ $item->code }}</td>
                                 <td>
-                                    @if( $item->image != null)
-                                        <img src="{{ $item->image }}" width="50px">
-                                    @endif
-                                    <a href="{{ route('magas.article',[ $item->id_article]) }}"> {{$item->designation}}</a>
+                                    @if( App\Models\Article::getImage($item->id_article) != null) <img
+                                            src="{{ asset(App\Models\Article::getImage($item->id_article)) }}"
+                                            width="40px">@endif
+                                    {{ $item->designation }}
                                 </td>
-                                <td>{{ \App\Models\Categorie::getLibelle($item->id_categorie) }}</td>
-                                <td>{{ \App\Models\Fournisseur::getLibelle($item->id_fournisseur) }}</td>
-                                <td>{{ \App\Models\Marque::getLibelle($item->id_marque) }}</td>
+                                <td>{{ $item->libelle_c }}</td>
+                                <td>{{ $item->libelle_f }}</td>
+                                <td>{{ $item->libelle_m }}</td>
                                 <td>{{ $item->couleur }}</td>
                                 <td>{{ $item->sexe }}</td>
                                 <td align="right">{{ number_format($item->prix_a,2) }}</td>
-                                <td align="right">{!! \App\Models\Article::getPrixTTC($item->prix_v) !!}</td>
+                                <td align="right">{{ number_format($item->prix_v*1.2,2) }}</td>
                                 <td align="center">
                                     <a data-toggle="modal" data-target="#modal{{ $loop->iteration }}">
                                         <i class="glyphicon glyphicon-info-sign" aria-hidden="false"></i>
@@ -124,15 +124,15 @@
                                                         </tr>
                                                         <tr>
                                                             <td>Marque</td>
-                                                            <th>{{ \App\Models\Article::getMarque($item->id_article) }}</th>
+                                                            <th>{{ $item->libelle_m }}</th>
                                                         </tr>
                                                         <tr>
-                                                            <td>Categorie</td>
-                                                            <th>{{ \App\Models\Article::getCategorie($item->id_article) }}</th>
+                                                            <td>Catégorie</td>
+                                                            <th>{{ $item->libelle_c }}</th>
                                                         </tr>
                                                         <tr>
                                                             <td>Fournisseur</td>
-                                                            <th>{{ \App\Models\Article::getFournisseur($item->id_article) }}</th>
+                                                            <th>{{ $item->libelle_f }}</th>
                                                         </tr>
                                                         <tr>
                                                             <td>Couleur</td>
@@ -146,51 +146,32 @@
                                                             <td colspan="2" align="center">Prix d'achat</td>
                                                         </tr>
                                                         <tr>
-                                                            <th align="right">{{ \App\Models\Article::getPrixAchatHT($item->id_article) }}
-                                                                Dhs HT
-                                                            </th>
-                                                            <th>{{ \App\Models\Article::getPrixAchatTTC($item->id_article) }}
-                                                                Dhs TTC
-                                                            </th>
+                                                            <th align="right">{{ number_format($item->prix_a,2) }} Dhs HT</th>
+                                                            <th>{{ number_format($item->prix_a*1.2,2) }} Dhs TTC</th>
                                                         </tr>
                                                         <tr>
                                                             <td colspan="2" align="center">Prix de vente</td>
                                                         </tr>
                                                         <tr>
-                                                            <th align="right">{{ \App\Models\Article::getPrixHT($item->id_article) }}
-                                                                Dhs HT
-                                                            </th>
-                                                            <th>{{ \App\Models\Article::getPrixTTC($item->id_article) }}
-                                                                Dhs TTC
-                                                            </th>
+                                                            <th align="right">{{ number_format($item->prix_v,2) }} Dhs HT</th>
+                                                            <th>{{ number_format($item->prix_v*1.2,2) }} Dhs TTC</th>
                                                         </tr>
                                                     </table>
-                                                    @if( $item->image != null) <img
-                                                            src="{{ asset($item->image) }}"
-                                                            width="150px">@endif
+                                                    @if( $item->image != null) <img src="{{ asset($item->image) }}" width="150px">@endif
                                                 </div>
                                                 <div class="modal-footer">
                                                     <div class="col-lg-4">
                                                         <form action="{{ route('magas.deleteArticle',[$item->id_article]) }}" method="post">
                                                             {{ csrf_field() }}
                                                             <input type="hidden" name="_method" value="DELETE">
-                                                            <button type="submit" class="btn btn-danger btn-outline">
-                                                                Supprimer
-                                                            </button>
+                                                            <button type="submit" class="btn btn-danger btn-outline">Supprimer</button>
                                                         </form>
                                                     </div>
                                                     <div class="col-lg-4">
-                                                        <a href="{{ route('magas.article',[$item->id_article]) }}"
-                                                           class="btn btn-info btn-outline">
-                                                            Modifier
-                                                        </a>
+                                                        <a href="{{ route('magas.article',[$item->id_article]) }}" class="btn btn-info btn-outline">Modifier</a>
                                                     </div>
                                                     <div class="col-lg-4">
-                                                        <button type="button" class="btn btn-info btn-outline"
-                                                                data-dismiss="modal">
-                                                            Fermer
-                                                        </button>
-
+                                                        <button type="button" class="btn btn-info btn-outline" data-dismiss="modal">Fermer</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -280,8 +261,6 @@
                 // }).draw();
 
 
-
-
                 $('a.toggle-vis').on('click', function (e) {
                     e.preventDefault();
                     var column = table.column($(this).attr('data-column'));
@@ -325,7 +304,6 @@
         }
     </style>
 @endsection
-
 
 @section('menu_1')@include('Espace_Magas._nav_menu_1')@endsection
 @section('menu_2')@include('Espace_Magas._nav_menu_2')@endsection
